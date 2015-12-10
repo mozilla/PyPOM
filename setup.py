@@ -8,6 +8,7 @@ setup(name='PyPOM',
       author_email='dhunt@mozilla.com',
       url='https://github.com/davehunt/PyPOM',
       py_modules=['pypom'],
+      install_requires=['selenium'],
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',
       classifiers=[

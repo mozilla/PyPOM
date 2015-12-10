@@ -8,22 +8,25 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 class WebView(object):
 
-    def __init__(self, base_url, selenium, timeout=10, **kwargs):
+    def __init__(self, base_url, selenium, **kwargs):
         self.base_url = base_url
-        self.timeout = timeout
         self.selenium = selenium
         self.wait = WebDriverWait(self.selenium, self.timeout)
         self.kwargs = kwargs
 
     @property
-    def _root(self):
+    def root(self):
         return self.selenium
 
+    @property
+    def timeout(self):
+        return 0
+
     def find_element(self, locator):
-        return self._root.find_element(*locator)
+        return self.root.find_element(*locator)
 
     def find_elements(self, locator):
-        return self._root.find_elements(*locator)
+        return self.root.find_elements(*locator)
 
     def is_element_present(self, locator):
         try:
@@ -36,10 +39,3 @@ class WebView(object):
             return self.find_element(locator).is_displayed()
         except NoSuchElementException:
             return False
-
-    def scroll_element_into_view(self, locator, x=0, y=0):
-        el = self.find_element(locator)
-        self.selenium.execute_script(
-            'arguments[0].scrollIntoView();'
-            'window.scrollBy(arguments[1], arguments[2]);', el, x, y)
-        return el
