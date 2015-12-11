@@ -12,6 +12,9 @@ PyPOM is a Python Page Object Model library for Selenium tests.
 .. image:: https://img.shields.io/travis/davehunt/PyPOM.svg
    :target: https://travis-ci.org/davehunt/PyPOM/
    :alt: Travis
+.. image:: https://img.shields.io/coveralls/davehunt/PyPOM.svg
+   :target: https://coveralls.io/github/davehunt/PyPOM
+   :alt: Coverage
 .. image:: https://img.shields.io/github/issues-raw/davehunt/PyPOM.svg
    :target: https://github.com/davehunt/PyPOM/issues
    :alt: Issues
