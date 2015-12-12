@@ -14,6 +14,13 @@ def base_url():
 
 
 @pytest.fixture
+def element(selenium):
+    element = Mock()
+    selenium.find_element.return_value = element
+    return element
+
+
+@pytest.fixture
 def page(base_url, selenium):
     from pypom import Page
     return Page(base_url, selenium)

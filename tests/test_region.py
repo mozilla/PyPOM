@@ -6,114 +6,166 @@ import random
 
 from mock import Mock
 from pypom import Region
+import pytest
 
 
-def test_root_selenium(page, selenium):
-    assert Region(page).root == selenium
+class TestNoRoot:
+
+    def test_root(self, page, selenium):
+        assert Region(page).root == selenium
+
+    def test_find_element(self, page, selenium):
+        locator = (str(random.random()), str(random.random()))
+        Region(page).find_element(locator)
+        selenium.find_element.assert_called_once_with(*locator)
+
+    def test_find_elements(self, page, selenium):
+        locator = (str(random.random()), str(random.random()))
+        Region(page).find_elements(locator)
+        selenium.find_elements.assert_called_once_with(*locator)
+
+    def test_is_element_displayed(self, page, selenium):
+        locator = (str(random.random()), str(random.random()))
+        assert Region(page).is_element_displayed(locator)
+        selenium.find_element.assert_called_once_with(*locator)
+
+    def test_is_element_displayed_not_present(self, page, selenium):
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        selenium.find_element.side_effect = NoSuchElementException()
+        assert not Region(page).is_element_displayed(locator)
+        selenium.find_element.assert_called_once_with(*locator)
+        selenium.find_element.is_displayed.assert_not_called()
+
+    def test_is_element_displayed_hidden(self, page, selenium):
+        locator = (str(random.random()), str(random.random()))
+        hidden_element = selenium.find_element()
+        hidden_element.is_displayed.return_value = False
+        assert not Region(page).is_element_displayed(locator)
+        selenium.find_element.assert_called_with(*locator)
+        hidden_element.is_displayed.assert_called_once_with()
 
 
-def test_root_element(page, selenium):
-    element = Mock()
-    assert Region(page, root=element).root == element
+class TestRootElement:
+
+    def test_root(self, page, selenium):
+        element = Mock()
+        assert Region(page, root=element).root == element
+
+    def test_find_element(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        Region(page, root=root_element).find_element(locator)
+        root_element.find_element.assert_called_once_with(*locator)
+        selenium.find_element.assert_not_called()
+
+    def test_find_elements(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        Region(page, root=root_element).find_elements(locator)
+        root_element.find_elements.assert_called_once_with(*locator)
+        selenium.find_elements.assert_not_called()
+
+    def test_is_element_present(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        assert Region(page, root=root_element).is_element_present(locator)
+        root_element.find_element.assert_called_once_with(*locator)
+        selenium.find_element.assert_not_called()
+
+    def test_is_element_present_not_preset(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        root_element.find_element.side_effect = NoSuchElementException()
+        assert not Region(page, root=root_element).is_element_present(locator)
+        root_element.find_element.assert_called_once_with(*locator)
+        selenium.find_element.assert_not_called()
+
+    def test_is_element_displayed(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        assert Region(page, root=root_element).is_element_displayed(locator)
+        root_element.find_element.assert_called_once_with(*locator)
+        selenium.find_element.assert_not_called()
+
+    def test_is_element_displayed_not_present(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        root_element.find_element.side_effect = NoSuchElementException()
+        region = Region(page, root=root_element)
+        assert not region.is_element_displayed(locator)
+        root_element.find_element.assert_called_once_with(*locator)
+        root_element.find_element.is_displayed.assert_not_called()
+
+    def test_is_element_displayed_hidden(self, page, selenium):
+        root_element = Mock()
+        locator = (str(random.random()), str(random.random()))
+        hidden_element = root_element.find_element()
+        hidden_element.is_displayed.return_value = False
+        region = Region(page, root=root_element)
+        assert not region.is_element_displayed(locator)
+        root_element.find_element.assert_called_with(*locator)
+        hidden_element.is_displayed.assert_called_once_with()
 
 
-def test_root_locator(page, selenium):
-    element = Mock()
-    selenium.find_element.return_value = element
-    locator = (str(random.random()), str(random.random()))
-    region = Region(page)
-    region._root_locator = locator
-    assert element == region.root
-    selenium.find_element.assert_called_once_with(*locator)
+class TestRootLocator:
 
+    @pytest.fixture
+    def region(self, page):
+        region = Region(page)
+        region._root_locator = (str(random.random()), str(random.random()))
+        return region
 
-def test_find_element_without_root(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    Region(page).find_element(locator)
-    selenium.find_element.assert_called_once_with(*locator)
+    def test_root(self, element, region, selenium):
+        assert element == region.root
+        selenium.find_element.assert_called_once_with(*region._root_locator)
 
+    def test_find_element(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        region.find_element(locator)
+        selenium.find_element.assert_called_once_with(*region._root_locator)
+        element.find_element.assert_called_once_with(*locator)
 
-def test_find_elements_without_root(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    Region(page).find_elements(locator)
-    selenium.find_elements.assert_called_once_with(*locator)
+    def test_find_elements(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        region.find_elements(locator)
+        selenium.find_element.assert_called_once_with(*region._root_locator)
+        element.find_elements.assert_called_once_with(*locator)
 
+    def test_is_element_present(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        assert region.is_element_present(locator)
+        selenium.find_element.assert_called_once_with(*region._root_locator)
+        element.find_element.assert_called_once_with(*locator)
 
-def test_find_element_with_root_element(page, selenium):
-    root_element = Mock()
-    locator = (str(random.random()), str(random.random()))
-    Region(page, root=root_element).find_element(locator)
-    root_element.find_element.assert_called_once_with(*locator)
-    selenium.find_element.assert_not_called()
+    def test_is_element_present_not_preset(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        element.find_element.side_effect = NoSuchElementException()
+        assert not region.is_element_present(locator)
+        selenium.find_element.assert_called_once_with(*region._root_locator)
+        element.find_element.assert_called_once_with(*locator)
 
+    def test_is_element_displayed(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        assert region.is_element_displayed(locator)
+        selenium.find_element.assert_called_once_with(*region._root_locator)
+        element.find_element.assert_called_once_with(*locator)
 
-def test_find_elements_with_root_element(page, selenium):
-    root_element = Mock()
-    locator = (str(random.random()), str(random.random()))
-    Region(page, root=root_element).find_elements(locator)
-    root_element.find_elements.assert_called_once_with(*locator)
-    selenium.find_elements.assert_not_called()
+    def test_is_element_displayed_not_present(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        element.find_element.side_effect = NoSuchElementException()
+        assert not region.is_element_displayed(locator)
+        element.find_element.assert_called_once_with(*locator)
+        element.find_element.is_displayed.assert_not_called()
 
-
-def test_find_element_with_root_locator(page, selenium):
-    root_locator = (str(random.random()), str(random.random()))
-    root_element = Mock()
-    selenium.find_element.return_value = root_element
-    region = Region(page)
-    region._root_locator = root_locator
-    element_locator = (str(random.random()), str(random.random()))
-    region.find_element(element_locator)
-    selenium.find_element.assert_called_once_with(*root_locator)
-    root_element.find_element.assert_called_once_with(*element_locator)
-
-
-def test_find_elements_with_root_locator(page, selenium):
-    root_locator = (str(random.random()), str(random.random()))
-    root_element = Mock()
-    selenium.find_element.return_value = root_element
-    region = Region(page)
-    region._root_locator = root_locator
-    elements_locator = (str(random.random()), str(random.random()))
-    region.find_elements(elements_locator)
-    selenium.find_element.assert_called_once_with(*root_locator)
-    root_element.find_elements.assert_called_once_with(*elements_locator)
-
-
-# TODO make the following tests region specific
-
-def test_is_element_present(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    assert page.is_element_present(locator)
-    selenium.find_element.assert_called_once_with(*locator)
-
-
-def test_is_element_present_not_present(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    from selenium.common.exceptions import NoSuchElementException
-    selenium.find_element.side_effect = NoSuchElementException()
-    assert not page.is_element_present(locator)
-    selenium.find_element.assert_called_once_with(*locator)
-
-
-def test_is_element_displayed(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    assert page.is_element_displayed(locator)
-    selenium.find_element.assert_called_once_with(*locator)
-
-
-def test_is_element_displayed_not_present(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    from selenium.common.exceptions import NoSuchElementException
-    selenium.find_element.side_effect = NoSuchElementException()
-    assert not page.is_element_displayed(locator)
-    selenium.find_element.assert_called_once_with(*locator)
-    selenium.find_element.is_displayed.assert_not_called()
-
-
-def test_is_element_displayed_not_displayed(page, selenium):
-    locator = (str(random.random()), str(random.random()))
-    element = selenium.find_element()
-    element.is_displayed.return_value = False
-    assert not page.is_element_displayed(locator)
-    selenium.find_element.assert_called_with(*locator)
-    element.is_displayed.assert_called_once_with()
+    def test_is_element_displayed_hidden(self, element, region, selenium):
+        locator = (str(random.random()), str(random.random()))
+        hidden_element = element.find_element()
+        hidden_element.is_displayed.return_value = False
+        assert not region.is_element_displayed(locator)
+        element.find_element.assert_called_with(*locator)
+        hidden_element.is_displayed.assert_called_once_with()
