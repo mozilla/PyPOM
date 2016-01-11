@@ -7,17 +7,17 @@ from .view import WebView
 
 class Page(WebView):
 
-    _url = None
-    """
-    A string which when appended to ``base_url``
-    indicates the url to the given page.
+    _url = '{base_url}'
+    """String representing a URL that will return this page.
 
-    Defaults to ``None``.
+    This string is formatted and can contain names of keyword arguments passed
+    during construcion of the page object. The ``{base_url}`` keyword argument
+    is always passed to the format operation.
     """
 
     def open(self):
         """
-        Navigates to the url returned by the :py:func:`url` property and
+        Navigates to the URL returned by the :py:func:`url` property and
         waits for the page to load by calling :py:func:`wait_for_page_to_load`.
 
         :returns:
@@ -30,19 +30,16 @@ class Page(WebView):
     @property
     def url(self):
         """
-        Returns the url to the current page, which is either built from
-        the private :py:data:`_url` variable if populated or is ``base_url``.
+        Returns the URL to the current page, formatted from :py:data:`_url`.
 
         :returns:
-            The url to the current page.
+            String representing a URL that will return this page.
         """
-        if self._url is not None:
-            return self._url.format(base_url=self.base_url, **self.kwargs)
-        return self.base_url
+        return self._url.format(base_url=self.base_url, **self.kwargs)
 
     def wait_for_page_to_load(self):
         """
-        Waits for the page to load by waiting until the url reported by
+        Waits for the page to load by waiting until the URL reported by
         Selenium is the same as that returned by the :py:func:`url` property.
 
         Note that it is common to extend or override this method

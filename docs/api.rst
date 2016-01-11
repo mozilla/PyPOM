@@ -3,21 +3,6 @@ API
 This part of the documentation describes the interfaces for using PyPOM.
 
 
-.. py:module:: pypom
-
-.. _WebView:
-
-WebView
--------
-
-.. py:module:: pypom.view
-
-.. autoclass:: WebView
-   :members:
-   :undoc-members:
-   :inherited-members:
-   :show-inheritance:
-
 .. _Page:
 
 Page

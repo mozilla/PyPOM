@@ -15,13 +15,13 @@ class WebView(object):
     def __init__(self, base_url, selenium, **kwargs):
         """
         :param base_url:
-            The base url for the site on which the test is being run.
+            The base URL for the site on which the test is being run.
 
         :param selenium:
             An instance of the Selenium class.
 
         :param kwargs:
-            Dictionary of arguments to add to the url when generated.
+            Dictionary of arguments to add to the URL when generated.
         """
 
         self.base_url = base_url
@@ -53,7 +53,7 @@ class WebView(object):
         of Selenium or a WebElement.
 
         :param locator:
-            A locator that selenium can understand.
+            A locator that Selenium can understand.
 
         :returns:
             The first WebElement found using ``locator``.
@@ -66,7 +66,7 @@ class WebView(object):
         of Selenium or a WebElement.
 
         :param locator:
-            A locator that selenium can understand.
+            A locator that Selenium can understand.
 
         :returns:
             A list of all WebElements found using ``locator``.
@@ -78,7 +78,7 @@ class WebView(object):
         Checks whether a given element is present in the DOM.
 
         :param locator:
-            A locator that selenium can understand.
+            A locator that Selenium can understand.
 
         :returns:
             A boolean indicating the presence of the element.
@@ -93,7 +93,7 @@ class WebView(object):
         Checks whether a given element is displayed in the browser.
 
         :param locator:
-            A locator that selenium can understand.
+            A locator that Selenium can understand.
 
         :returns:
             A boolean indicating the visibility of the element.
