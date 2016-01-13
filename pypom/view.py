@@ -12,66 +12,30 @@ class WebView(object):
      and :class:`pypom.region.Region` classes
      """
 
-    def __init__(self, base_url, selenium, **kwargs):
+    def __init__(self, selenium, base_url=None, timeout=0, **url_kwargs):
         """
-        :param base_url:
-            The base URL for the site on which the test is being run.
-
         :param selenium:
             An instance of the Selenium class.
 
-        :param kwargs:
+        :param base_url:
+            The base URL for the site on which the test is being run.
+
+            Defaults to ``None``.
+
+        :param timeout:
+            The timeout, in seconds, to be used for calls to ``self.wait``.
+
+            Defaults to ``0``.
+
+        :param url_kwargs:
             Dictionary of arguments to add to the URL when generated.
         """
 
-        self.base_url = base_url
         self.selenium = selenium
+        self.base_url = base_url
+        self.timeout = timeout
         self.wait = WebDriverWait(self.selenium, self.timeout)
-        self.kwargs = kwargs
-
-    @property
-    def root(self):
-        """
-        The root from which Selenium commands are issued.
-
-        Defaults to ``self.selenium`` for page objects.
-        """
-        return self.selenium
-
-    @property
-    def timeout(self):
-        """
-        The timeout, in seconds, to be used for calls to ``self.wait``.
-
-        Defaults to ``0``.
-        """
-        return 0
-
-    def find_element(self, locator):
-        """
-        Calls ``find_element`` on ``self.root`` which is either an instance
-        of Selenium or a WebElement.
-
-        :param locator:
-            A locator that Selenium can understand.
-
-        :returns:
-            The first WebElement found using ``locator``.
-        """
-        return self.root.find_element(*locator)
-
-    def find_elements(self, locator):
-        """
-        Calls ``find_elements`` on ``self.root`` which is either an instance
-        of Selenium or a WebElement.
-
-        :param locator:
-            A locator that Selenium can understand.
-
-        :returns:
-            A list of all WebElements found using ``locator``.
-        """
-        return self.root.find_elements(*locator)
+        self.url_kwargs = url_kwargs
 
     def is_element_present(self, locator):
         """
