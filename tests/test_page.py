@@ -10,21 +10,61 @@ from pypom import Page
 
 
 def test_base_url(base_url, page):
-    assert base_url == page.url
+    assert base_url == page.canonical_url
 
 
-def test_url_keywords(base_url, selenium):
+def test_canonical_url_absolute(base_url, selenium):
+    url_template = 'https://www.test.com/'
+
+    class MyPage(Page):
+        URL_TEMPLATE = url_template
+    page = MyPage(selenium, base_url)
+    assert url_template == page.canonical_url
+
+
+def test_canonical_url_absolute_keywords(base_url, selenium):
+    value = str(random.random())
+    absolute_url = 'https://www.test.com/'
+
+    class MyPage(Page):
+        URL_TEMPLATE = absolute_url + '{key}'
+    page = MyPage(selenium, base_url, key=value)
+    assert absolute_url + value == page.canonical_url
+
+
+def test_canonical_url_empty(selenium):
+    page = Page(selenium)
+    assert page.canonical_url is None
+
+
+def test_canonical_url_keywords(base_url, selenium):
     value = str(random.random())
 
     class MyPage(Page):
-        _url = '{key}'
-    page = MyPage('foo', selenium, key=value)
-    assert value == page.url
+        URL_TEMPLATE = '{key}'
+    page = MyPage(selenium, base_url, key=value)
+    assert base_url + value == page.canonical_url
+
+
+def test_canonical_url_prepend(base_url, selenium):
+    url_template = str(random.random())
+
+    class MyPage(Page):
+        URL_TEMPLATE = url_template
+    page = MyPage(selenium, base_url)
+    assert base_url + url_template == page.canonical_url
 
 
 def test_open(page, selenium):
-    selenium.current_url = page.url
+    selenium.current_url = page.canonical_url
     assert isinstance(page.open(), Page)
+
+
+def test_open_canonical_url_none(selenium):
+    from pypom.exception import UsageError
+    page = Page(selenium)
+    with pytest.raises(UsageError):
+        page.open()
 
 
 def test_open_timeout(page, selenium):
@@ -35,7 +75,7 @@ def test_open_timeout(page, selenium):
 
 
 def test_wait_for_page(page, selenium):
-    selenium.current_url = page.url
+    selenium.current_url = page.canonical_url
     assert isinstance(page.wait_for_page_to_load(), Page)
 
 
@@ -44,6 +84,12 @@ def test_wait_for_page_timeout(page, selenium):
     selenium.current_url = str(random.random())
     with pytest.raises(TimeoutException):
         page.wait_for_page_to_load()
+
+
+def test_wait_for_page_empty_base_url(selenium):
+    selenium.current_url = str(random.random())
+    page = Page(selenium)
+    assert isinstance(page.wait_for_page_to_load(), Page)
 
 
 def test_find_element(page, selenium):

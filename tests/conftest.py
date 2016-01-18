@@ -2,15 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import random
-
 from mock import Mock
 import pytest
 
 
 @pytest.fixture
 def base_url():
-    return str(random.random())
+    return 'https://www.mozilla.org/'
 
 
 @pytest.fixture
@@ -21,9 +19,9 @@ def element(selenium):
 
 
 @pytest.fixture
-def page(base_url, selenium):
+def page(selenium, base_url):
     from pypom import Page
-    return Page(base_url, selenium)
+    return Page(selenium, base_url)
 
 
 @pytest.fixture
