@@ -13,19 +13,11 @@ to fork_ and contribute!
 .. _fork: https://github.com/davehunt/PyPOM
 
 
-User Guide
-----------
 .. toctree::
    :maxdepth: 2
 
    installing
    user_guide
+   api
    development
    news
-
-API
----
-.. toctree::
-   :maxdepth: 2
-
-   api
