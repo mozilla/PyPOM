@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='PyPOM',
-      version='1.0',
+      version='1.0.dev1',
       description='python page object model for selenium',
       long_description=open('README.rst').read(),
       author='Dave Hunt',
@@ -12,7 +12,7 @@ setup(name='PyPOM',
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',
       classifiers=[
-          'Development Status :: 5 - Production/Stable',
+          'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)',
           'Operating System :: POSIX',
