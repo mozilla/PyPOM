@@ -12,7 +12,7 @@ class WebView(object):
      and :class:`pypom.region.Region` classes
      """
 
-    def __init__(self, selenium, base_url=None, timeout=0, **url_kwargs):
+    def __init__(self, selenium, base_url=None, timeout=10, **url_kwargs):
         """
         :param selenium:
             An instance of the Selenium class.
@@ -25,7 +25,7 @@ class WebView(object):
         :param timeout:
             The timeout, in seconds, to be used for calls to ``self.wait``.
 
-            Defaults to ``0``.
+            Defaults to ``10``.
 
         :param url_kwargs:
             Dictionary of arguments to add to the URL when generated.

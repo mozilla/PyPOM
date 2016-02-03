@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='PyPOM',
-      version='1.0.dev2',
+      version='1.0.dev3',
       description='python page object model for selenium',
       long_description=open('README.rst').read(),
       author='Dave Hunt',
