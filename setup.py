@@ -1,13 +1,13 @@
 from setuptools import setup
 
 setup(name='PyPOM',
-      version='1.0.dev1',
+      version='1.0.dev2',
       description='python page object model for selenium',
       long_description=open('README.rst').read(),
       author='Dave Hunt',
       author_email='dhunt@mozilla.com',
       url='https://github.com/davehunt/PyPOM',
-      py_modules=['pypom'],
+      packages=['pypom'],
       install_requires=['selenium'],
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',
