@@ -4,5 +4,5 @@
 
 
 class UsageError(Exception):
-    """A custom exception for use by PyPOM."""
+    """PyPOM usage error."""
     pass

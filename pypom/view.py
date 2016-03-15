@@ -7,62 +7,76 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 class WebView(object):
-    """
-    The WebView class is the base for both the :class:`pypom.page.Page`
-     and :class:`pypom.region.Region` classes
-     """
 
-    def __init__(self, selenium, base_url=None, timeout=10, **url_kwargs):
-        """
-        :param selenium:
-            An instance of the Selenium class.
-
-        :param base_url:
-            The base URL for the site on which the test is being run.
-
-            Defaults to ``None``.
-
-        :param timeout:
-            The timeout, in seconds, to be used for calls to ``self.wait``.
-
-            Defaults to ``10``.
-
-        :param url_kwargs:
-            Dictionary of arguments to add to the URL when generated.
-        """
-
+    def __init__(self, selenium, timeout):
         self.selenium = selenium
-        self.base_url = base_url
         self.timeout = timeout
         self.wait = WebDriverWait(self.selenium, self.timeout)
-        self.url_kwargs = url_kwargs
 
-    def is_element_present(self, locator):
+    def find_element(self, strategy, locator):
+        """Finds an element on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
+        :rtype: selenium.webdriver.remote.webelement.WebElement
+
         """
-        Checks whether a given element is present in the DOM.
+        from pypom import Region
+        if isinstance(self, Region):
+            root = self.root
+            if root is not None:
+                return root.find_element(strategy, locator)
+        return self.selenium.find_element(strategy, locator)
 
-        :param locator:
-            A locator that Selenium can understand.
+    def find_elements(self, strategy, locator):
+        """Finds elements on the page.
 
-        :returns:
-            A boolean indicating the presence of the element.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target elements.
+        :type strategy: str
+        :type locator: str
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
+        :rtype: list
+
+        """
+        from pypom import Region
+        if isinstance(self, Region):
+            root = self.root
+            if root is not None:
+                return root.find_elements(strategy, locator)
+        return self.selenium.find_elements(strategy, locator)
+
+    def is_element_present(self, strategy, locator):
+        """Checks whether an element is present.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is present, else ``False``.
+        :rtype: bool
+
         """
         try:
-            return self.find_element(locator)
+            return self.find_element(strategy, locator)
         except NoSuchElementException:
             return False
 
-    def is_element_displayed(self, locator):
-        """
-        Checks whether a given element is displayed in the browser.
+    def is_element_displayed(self, strategy, locator):
+        """Checks whether an element is displayed.
 
-        :param locator:
-            A locator that Selenium can understand.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is displayed, else ``False``.
+        :rtype: bool
 
-        :returns:
-            A boolean indicating the visibility of the element.
         """
         try:
-            return self.find_element(locator).is_displayed()
+            return self.find_element(strategy, locator).is_displayed()
         except NoSuchElementException:
             return False

@@ -6,73 +6,57 @@ from .view import WebView
 
 
 class Region(WebView):
+    """A page region object.
 
-    _root_locator = None
-    """
-    A Selenium locator that will return a WebElement which should
-    serve as the root element for this Region.
+    Used as a base class for your project's page region objects.
 
-    Defaults to ``None``.
+    :param page: Page object this region appears in.
+    :param root: (optional) element that serves as the root for the region.
+    :type page: :py:class:`~.page.Page`
+    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
+
+    Usage::
+
+      from pypom import Page, Region
+      from selenium.webdriver import Firefox
+      from selenium.webdriver.common.by import By
+
+      class Mozilla(Page):
+          URL_TEMPLATE = 'https://www.mozilla.org/'
+
+          @property
+          def newsletter(self):
+              return Newsletter(self)
+
+          class Newsletter(Region):
+              _root_locator = (By.ID, 'newsletter-form')
+              _submit_locator = (By.ID, 'footer_email_submit')
+
+              def sign_up(self):
+                  self.find_element(*self._submit_locator).click()
+
+      driver = Firefox()
+      page = Mozilla(driver).open()
+      page.newsletter.sign_up()
+
     """
 
     def __init__(self, page, root=None):
-        """
-        :param page:
-            The page object in which this Region is contained.
-
-        :param root:
-            WebElement from which Selenium find commands will
-            operate for this Region.
-
-            Defaults to ``None`` which results in the root being Selenium.
-        """
-        super(Region, self).__init__(page.selenium,
-                                     page.base_url,
-                                     page.timeout)
-        self._root_element = root
+        super(Region, self).__init__(page.selenium, page.timeout)
+        self._root = root
+        self._root_locator = None
         self.page = page
 
     @property
     def root(self):
+        """Root element for the page region.
+
+        Page regions should define a root element either by passing this on
+        instantiation or by defining a :py:attr:`_root_locator` attribute. To
+        reduce the chances of hitting :py:class:`~selenium.common.exceptions.StaleElementReferenceException`
+        you should use :py:attr:`_root_locator`, as this is looked up every
+        time the :py:attr:`root` property is accessed.
         """
-        Returns the root from which Selenium find commands will
-        operate for this Region.
-
-        If a ``root`` was passed into the constructor,
-        that element will be returned as the root.
-        If a locator was specified in :py:data:`_root_locator`,
-        the element found using that locator will be returned as the root.
-        If neither of those are true,
-        then Selenium will be returned as the root.
-        """
-        if self._root_element is None:
-            if self._root_locator is not None:
-                return self.selenium.find_element(*self._root_locator)
-            return self.selenium
-        return self._root_element
-
-    def find_element(self, locator):
-        """
-        Calls ``find_element`` on ``self.root`` which is either an instance
-        of Selenium or a WebElement.
-
-        :param locator:
-            A locator that Selenium can understand.
-
-        :returns:
-            The first WebElement found using ``locator``.
-        """
-        return self.root.find_element(*locator)
-
-    def find_elements(self, locator):
-        """
-        Calls ``find_elements`` on ``self.root`` which is either an instance
-        of Selenium or a WebElement.
-
-        :param locator:
-            A locator that Selenium can understand.
-
-        :returns:
-            A list of all WebElements found using ``locator``.
-        """
-        return self.root.find_elements(*locator)
+        if self._root is None and self._root_locator is not None:
+            return self.page.find_element(*self._root_locator)
+        return self._root
