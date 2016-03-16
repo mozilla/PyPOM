@@ -9,6 +9,21 @@ from pypom import Region
 import pytest
 
 
+class TestWaitForRegion:
+
+    def test_wait_for_region(self, page):
+        assert isinstance(Region(page).wait_for_region_to_load(), Region)
+
+    def test_wait_for_region_timeout(self, page):
+        class MyRegion(Region):
+            def wait_for_region_to_load(self):
+                self.wait.until(lambda s: False)
+        page.timeout = 0
+        from selenium.common.exceptions import TimeoutException
+        with pytest.raises(TimeoutException):
+            MyRegion(page)
+
+
 class TestNoRoot:
 
     def test_root(self, page):
