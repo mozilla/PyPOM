@@ -6,8 +6,7 @@ page object model for use with Selenium_ functional tests.
 
 It is tested on Python 2.6 through 3.5.
 
-PyPOM is a work in progress. Contributions are welcome. Feel free
-to fork_ and contribute!
+Contributions are welcome. Feel free to fork_ and contribute!
 
 .. _Selenium: http://seleniumhq.org/
 .. _fork: https://github.com/davehunt/PyPOM

@@ -1,5 +1,5 @@
-API
-===
+Developer Interface
+===================
 This part of the documentation describes the interfaces for using PyPOM.
 
 
