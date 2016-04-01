@@ -129,9 +129,9 @@ class TestRootLocator:
 
     @pytest.fixture
     def region(self, page):
-        region = Region(page)
-        region._root_locator = (str(random.random()), str(random.random()))
-        return region
+        class MyRegion(Region):
+            _root_locator = (str(random.random()), str(random.random()))
+        return MyRegion(page)
 
     def test_root(self, element, region, selenium):
         assert element == region.root
