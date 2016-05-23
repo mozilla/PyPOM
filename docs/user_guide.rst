@@ -109,12 +109,111 @@ application.
 Regions
 -------
 
-Coming soon...
+Region objects represent one or more elements of a web page that are repeated
+mutliple times on a page, or shared between multiple web pages. They prevent
+duplication, and can improve the readability and maintainability of your page
+objects.
+
+Root elements
+~~~~~~~~~~~~~
+
+It's important for page regions to have a root element. This is the element
+that any child elements will be located within. This means that page region
+locators do not need to be unique on the page, only unique within the context
+of the root element.
+
+If your page region contains a :py:attr:`~pypom.region.Region._root_locator`
+attribute, this will be used to locate the root element every time an instance
+of the region is created. This is recommended for most page regions as it
+avoids issues when the root element becomes stale.
+
+Alternatively, you can locate the root element yourself and pass it to the
+region on construction. This is useful when creating regions that are repeated
+on a single page.
+
+The root element can later be accessed via the
+:py:attr:`~pypom.region.Region.root` attribute on the region, which may be
+necessary if you need to interact with it.
+
+Repeating regions
+~~~~~~~~~~~~~~~~~
+
+Page regions are useful when you have multiple items on a page that share the
+same characteristics, such as a list of search results. By creating a page
+region, you can interact with any of these items in a common way::
+
+  from pypom import Page, Region
+  from selenium.webdriver.common.by import By
+
+  class Results(Page):
+      _result_locator = (By.CLASS_NAME, 'result')
+
+      @property
+      def results(self):
+          results = self.find_elements(*self._result_locator)
+          return [self.Result(el) for el in results]
+
+      class Result(Region):
+          _name_locator = (By.CLASS_NAME, 'name')
+
+          @property
+          def name(self):
+              return self.find_element(*self._name_locator).text
+
+The above example provides a ``results`` property on the page class. When
+called, this locates all results on the page and returns a list of ``Result``
+regions. This can be used to determine the number of results, and each result
+can be accessed from this list for further state or interactions.
+
+Shared regions
+~~~~~~~~~~~~~~
+
+Pages with common characteristics can use regions to avoid duplication.
+Examples of this include page headers, navigation menus, login forms, and
+footers. These regions can either be defined in a base page object that is
+inherited by the pages that contain the region, or they can exist in their own
+module::
+
+  from pypom import Page, Region
+  from selenium.webdriver.common.by import By
+
+  class Base(Page):
+
+      @property
+      def header(self):
+          return self.Header(self)
+
+      class Header(Region):
+          _header_locator = (By.ID, 'header')
+
+          def is_displayed(self):
+              return self.root.is_displayed()
+
+In the above example, and page objects that extend ``Base`` will inherit the
+``header`` property, and be able to check if it's displayed.
 
 Waiting for regions to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Coming soon...
+The :py:func:`~pypom.region.Region.wait_for_region_to_load` function can be
+overridden and customised for your project's needs by adding suitable
+`explicit waits`_ to ensure the region is ready for interaction. This function
+is called whenever a region is instantiated, and can be called directly by
+functions that a region to reload.
+
+The following example waits for an element within a page region to be
+displayed::
+
+  from pypom import Region
+
+  class Header(Region):
+
+      def wait_for_region_to_load(self):
+          self.wait.until(lambda s: self.root.is_displayed())
+
+Other things to wait for might include when elements are displayed or enabled,
+or when an element has a particular class. This will be very dependent on your
+application.
 
 Locators
 --------
