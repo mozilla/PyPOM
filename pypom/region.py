@@ -91,7 +91,7 @@ class Region(WebView):
                   _root_locator = (By.ID, 'newsletter-form')
 
                   def wait_for_region_to_load(self):
-                      self.wait.until(lambda s: 'loaded' in root.get_attribute('class'))
+                      self.wait.until(lambda s: 'loaded' in self.root.get_attribute('class'))
 
         """
         return self

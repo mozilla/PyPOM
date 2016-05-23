@@ -8,7 +8,7 @@ Pages
 
 Page objects are representations of web pages. They provide functions to allow
 simulating user actions, and providing properties that return state from the
-page. The :py:class:`~pypom.page,Page` class provided by PyPOM provides a
+page. The :py:class:`~pypom.page.Page` class provided by PyPOM provides a
 simple implementation that can be sub-classed to apply to your project.
 
 To instantiate a page object with PyPOM you will need a Selenium_
@@ -85,7 +85,7 @@ Waiting for pages to load
 Whenever Selenium_ detects that a page is loading, it does it's best to block
 until it's complete. Unfortunately, as Seleniun does not know your application,
 it's quite common for it to return earlier than a user would consider the page
-to be ready. For this reason, the :py:func:`pypom.page.Page.wait_for_page_to_load`
+to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
 function can be overridden and customised for your project's needs by adding
 suitable `explicit waits`_. This function is called by :py:func:`~pypom.page.Page.open`
 after loading the seed URL, and can be called directly by functions that cause
@@ -120,13 +120,13 @@ Locators
 --------
 
 In order to locate elements you need to specify both a locator strategy and the
-locator itself. See the official API documentation for the various
-`locator strategies`_. A suggested approach is to store your locators at the
-top of your page/region classes. Ideally these should be preceeded with a
-single underscore to indicate that they're primarily reserved for internal use.
-These attributes can be stored as a two item tuple containing both the strategy
-and locator, and can then be unpacked when passed to a method that requires the
-arguments to be separated.
+locator itself. The :py:class:`~selenium.webdriver.common.by.By` class covers
+the common locator strategies. A suggested approach is to store your locators
+at the top of your page/region classes. Ideally these should be preceeded with
+a single underscore to indicate that they're primarily reserved for internal
+use. These attributes can be stored as a two item tuple containing both the
+strategy and locator, and can then be unpacked when passed to a method that
+requires the arguments to be separated.
 
 The following example shows a locator being defined and used in a page object::
 
@@ -180,4 +180,3 @@ inherited by a base project page class.
   have a performance issue that will considerably affect the user experience.
 
 .. _Selenium: http://docs.seleniumhq.org/
-.. _locator strategies: http://seleniumhq.github.io/selenium/docs/api/py/webdriver/selenium.webdriver.common.by.html
