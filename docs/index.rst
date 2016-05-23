@@ -9,7 +9,7 @@ It is tested on Python 2.6 through 3.5.
 Contributions are welcome. Feel free to fork_ and contribute!
 
 .. _Selenium: http://seleniumhq.org/
-.. _fork: https://github.com/davehunt/PyPOM
+.. _fork: https://github.com/mozilla/PyPOM
 
 
 .. toctree::
