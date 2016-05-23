@@ -119,7 +119,26 @@ Coming soon...
 Locators
 --------
 
-Coming soon...
+In order to locate elements you need to specify both a locator strategy and the
+locator itself. See the official API documentation for the various
+`locator strategies`_. A suggested approach is to store your locators at the
+top of your page/region classes. Ideally these should be preceeded with a
+single underscore to indicate that they're primarily reserved for internal use.
+These attributes can be stored as a two item tuple containing both the strategy
+and locator, and can then be unpacked when passed to a method that requires the
+arguments to be separated.
+
+The following example shows a locator being defined and used in a page object::
+
+  from pypom import Page
+  from selenium.webdriver.common.by import By
+
+  class Mozilla(Page):
+      _logo_locator = (By.ID, 'logo')
+
+      def wait_for_page_to_load(self):
+          logo = self.find_element(*self._logo_locator)
+          self.wait.until(lambda s: logo.is_displayed())
 
 Explicit waits
 --------------
@@ -144,8 +163,8 @@ box that causes a button to become enabled::
       _sign_me_up_locator = (By.ID, 'sign_up')
 
       def accept_privacy_policy(self):
-          self.selenium.find_element(*self._privacy_policy_locator).click()
-          sign_me_up = self.selenium.find_element(*self._sign_me_up_locator)
+          self.find_element(*self._privacy_policy_locator).click()
+          sign_me_up = self.find_element(*self._sign_me_up_locator)
           self.wait.until(lambda s: sign_me_up.is_enabled())
 
 You can either specify a timeout by passing the optional ``timeout`` keyword
@@ -161,3 +180,4 @@ inherited by a base project page class.
   have a performance issue that will considerably affect the user experience.
 
 .. _Selenium: http://docs.seleniumhq.org/
+.. _locator strategies: http://seleniumhq.github.io/selenium/docs/api/py/webdriver/selenium.webdriver.common.by.html
