@@ -128,10 +128,10 @@ For convenience, a :py:class:`~selenium.webdriver.support.wait.WebDriverWait`
 object is instantiated with an optional timeout (with a default of 10 seconds)
 for every page. This allows your page objects to define an explicit wait
 whenever an interaction causes a reponse that a real user would wait for before
-continuing. For example, checking a box might make button enabled. If we didn't
-wait for the button to become enabled we may try clicking on it too early,
-and nothing would happen. Another example of where explicit waits are common is
-when `waiting for pages to load`_ or `waiting for regions to load`_.
+continuing. For example, checking a box might make a button become enabled. If
+we didn't wait for the button to become enabled we may try clicking on it too
+early, and nothing would happen. Another example of where explicit waits are
+common is when `waiting for pages to load`_ or `waiting for regions to load`_.
 
 The following example demonstrates a wait that is necessary after checking a
 box that causes a button to become enabled::
@@ -156,7 +156,7 @@ inherited by a base project page class.
 .. note::
 
   The default timeout of 10 seconds may be considered excessive, and you may
-  with to reduce it. It it not recommended to increase the timeout however. If
+  wish to reduce it. It it not recommended to increase the timeout however. If
   you have interactions that take longer than the default you may find that you
   have a performance issue that will considerably affect the user experience.
 
