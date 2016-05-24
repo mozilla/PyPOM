@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PyPOM'
-copyright = u'2015, Mozilla'
+copyright = u'2016, Mozilla'
 author = u'Mozilla'
 
 # The version info for the project you're documenting, acts as replacement for
