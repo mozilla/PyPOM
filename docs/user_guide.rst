@@ -184,7 +184,7 @@ module::
           return self.Header(self)
 
       class Header(Region):
-          _header_locator = (By.ID, 'header')
+          _root_locator = (By.ID, 'header')
 
           def is_displayed(self):
               return self.root.is_displayed()
