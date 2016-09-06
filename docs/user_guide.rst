@@ -11,7 +11,10 @@ simulating user actions, and providing properties that return state from the
 page. The :py:class:`~pypom.page.Page` class provided by PyPOM provides a
 simple implementation that can be sub-classed to apply to your project.
 
-To instantiate a page object with PyPOM you will need a Selenium_
+PyPOM supports both Selenium_ or Splinter_ (basically a Selenium wrapper with
+a more usable API).
+
+To instantiate a page object with PyPOM with Selenium_ you will need a Selenium_
 :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object. The
 following very simple example opens the Mozilla website in Firefox, and
 instantiates a page object representing the landing page::
@@ -25,6 +28,14 @@ instantiates a page object representing the landing page::
   driver = Firefox()
   driver.get('https://www.mozilla.org')
   page = Mozilla(driver)
+
+If you are using Splinter_ you have to use a :py:class:`~splinter.Browser` object
+as driver::
+
+  from splinter import Browser
+
+  driver = Browser()
+
 
 If a page has a seed URL then you can call the :py:func:`~pypom.page.Page.open`
 function to open the page in the browser. There are a number of ways to specify
@@ -46,6 +57,8 @@ URL::
   base_url = 'https://www.mozilla.org'
   driver = Firefox()
   page = Mozilla(driver, base_url).open()
+
+The same behaviour occurs using a Splinter_ driver.
 
 URL templates
 ~~~~~~~~~~~~~
@@ -79,10 +92,12 @@ following example adds a locale to the URL::
   driver = Firefox()
   page = Mozilla(driver, base_url, locale='de').open()
 
+The same behaviour occurs using a Splinter_ driver.
+
 Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever Selenium_ detects that a page is loading, it does it's best to block
+Whenever Selenium_ or Splinter_ detects that a page is loading, it does it's best to block
 until it's complete. Unfortunately, as Seleniun does not know your application,
 it's quite common for it to return earlier than a user would consider the page
 to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
@@ -165,6 +180,13 @@ called, this locates all results on the page and returns a list of ``Result``
 regions. This can be used to determine the number of results, and each result
 can be accessed from this list for further state or interactions.
 
+If you are using Splinter_ you have to use a different data structure for
+selectors. For example::
+
+  _result_locator = ('css', '.result')
+
+More info about supported selectors in the `Locators` section.
+
 Shared regions
 ~~~~~~~~~~~~~~
 
@@ -191,6 +213,8 @@ module::
 
 In the above example, and page objects that extend ``Base`` will inherit the
 ``header`` property, and be able to check if it's displayed.
+
+Same behaviour with Splinter_ using a different selector structure.
 
 Waiting for regions to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -239,6 +263,17 @@ The following example shows a locator being defined and used in a page object::
           logo = self.find_element(*self._logo_locator)
           self.wait.until(lambda s: logo.is_displayed())
 
+With Splinter_ instead of `By.ID` you should use `id`. For a full list
+of supported locator strategies see here:
+
+* name
+* id
+* css
+* xpath
+* text
+* value
+* tag
+
 Explicit waits
 --------------
 
@@ -271,6 +306,8 @@ argument when instantiating a page object, or you can override the
 :py:func:`~pypom.page.Page.__init__` method if you want your timeout to be
 inherited by a base project page class.
 
+The same behaviour occurs usign Splinter_ using `id` as selector strateby.
+
 .. note::
 
   The default timeout of 10 seconds may be considered excessive, and you may
@@ -279,3 +316,4 @@ inherited by a base project page class.
   have a performance issue that will considerably affect the user experience.
 
 .. _Selenium: http://docs.seleniumhq.org/
+.. _Splinter: https://github.com/cobrateam/splinter

@@ -4,6 +4,12 @@
 
 from mock import Mock
 import pytest
+from pypom.selenium_driver import ISelenium
+from pypom.splinter_driver import (
+    ISplinter,
+    ALLOWED_STRATEGIES,
+)
+from zope.interface import alsoProvides
 
 
 @pytest.fixture
@@ -12,18 +18,31 @@ def base_url():
 
 
 @pytest.fixture
-def element(selenium):
+def element(driver):
     element = Mock()
-    selenium.find_element.return_value = element
+    driver.find_element.return_value = element
     return element
 
 
 @pytest.fixture
-def page(selenium, base_url):
+def page(driver, base_url):
     from pypom import Page
-    return Page(selenium, base_url)
+    return Page(driver, base_url)
+
+
+@pytest.fixture(params=[ISelenium, ISplinter])
+def driver_interface(request):
+    return request.param
 
 
 @pytest.fixture
-def selenium():
-    return Mock()
+def driver(request, driver_interface):
+    """ All drivers """
+    mock = Mock()
+    alsoProvides(mock, driver_interface)
+    return mock
+
+
+@pytest.fixture(params=ALLOWED_STRATEGIES)
+def splinter_strategy(request):
+    return request.param

@@ -1,5 +1,7 @@
 from setuptools import setup
 
+splinter_requires = ['splinter']
+
 setup(name='PyPOM',
       version='1.0',
       description='python page object model for selenium',
@@ -8,7 +10,13 @@ setup(name='PyPOM',
       author_email='dhunt@mozilla.com',
       url='https://github.com/mozilla/PyPOM',
       packages=['pypom'],
-      install_requires=['selenium'],
+      install_requires=['zope.interface',
+                        'zope.component',
+                        'selenium',
+                        ],
+      extras_require={
+          'splinter': splinter_requires,
+      },
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',
       classifiers=[

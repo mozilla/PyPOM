@@ -18,11 +18,11 @@ class Page(WebView):
 
     Used as a base class for your project's page objects.
 
-    :param selenium: WebDriver object.
+    :param driver: WebDriver like object.
     :param base_url: (optional) Base URL.
     :param timeout: (optional) Timeout used for explicit waits. Defaults to ``10``.
     :param url_kwargs: (optional) Keyword arguments used when formatting the :py:attr:`seed_url`.
-    :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver`
+    :type driver: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or other supported drivers like http://splinter.readthedocs.io/en/latest/index.html#drivers
     :type base_url: str
     :type timeout: int
 
@@ -56,8 +56,8 @@ class Page(WebView):
 
     """
 
-    def __init__(self, selenium, base_url=None, timeout=10, **url_kwargs):
-        super(Page, self).__init__(selenium, timeout)
+    def __init__(self, driver, base_url=None, timeout=10, **url_kwargs):
+        super(Page, self).__init__(driver, timeout)
         self.base_url = base_url
         self.url_kwargs = url_kwargs
 
@@ -89,7 +89,7 @@ class Page(WebView):
 
         """
         if self.seed_url:
-            self.selenium.get(self.seed_url)
+            self.driver_adapter.open(self.seed_url)
             self.wait_for_page_to_load()
             return self
         raise UsageError('Set a base URL or URL_TEMPLATE to open this page.')

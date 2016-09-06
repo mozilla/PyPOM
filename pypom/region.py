@@ -13,7 +13,7 @@ class Region(WebView):
     :param page: Page object this region appears in.
     :param root: (optional) element that serves as the root for the region.
     :type page: :py:class:`~.page.Page`
-    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
+    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`, :py:class:`~splinter.driver.webdriver.WebDriverElement` or any third party supported web element if you register your own plugin implementation
 
     Usage::
 
@@ -44,7 +44,7 @@ class Region(WebView):
     _root_locator = None
 
     def __init__(self, page, root=None):
-        super(Region, self).__init__(page.selenium, page.timeout)
+        super(Region, self).__init__(page.driver, page.timeout)
         self._root = root
         self.page = page
         self.wait_for_region_to_load()
@@ -56,7 +56,7 @@ class Region(WebView):
         Page regions should define a root element either by passing this on
         instantiation or by defining a :py:attr:`_root_locator` attribute. To
         reduce the chances of hitting :py:class:`~selenium.common.exceptions.StaleElementReferenceException`
-        you should use :py:attr:`_root_locator`, as this is looked up every
+        or similar you should use :py:attr:`_root_locator`, as this is looked up every
         time the :py:attr:`root` property is accessed.
         """
         if self._root is None and self._root_locator is not None:
@@ -95,3 +95,55 @@ class Region(WebView):
 
         """
         return self
+
+    def find_element(self, strategy, locator):
+        """Finds an element on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
+        :rtype: selenium.webdriver.remote.webelement.WebElement or splinter.driver.webdriver.WebDriverElement
+
+        """
+        return self.driver_adapter.find_element(strategy, locator, root=self.root)
+
+    def find_elements(self, strategy, locator):
+        """Finds elements on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param locator: Location of target elements.
+        :type strategy: str
+        :type locator: str
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` or :py:class:`splinter.element_list.ElementList`
+        :rtype: list
+
+        """
+        return self.driver_adapter.find_elements(strategy, locator, root=self.root)
+
+    def is_element_present(self, strategy, locator):
+        """Checks whether an element is present.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is present, else ``False``.
+        :rtype: bool
+
+        """
+        return self.driver_adapter.is_element_present(strategy, locator, root=self.root)
+
+    def is_element_displayed(self, strategy, locator):
+        """Checks whether an element is displayed.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is displayed, else ``False``.
+        :rtype: bool
+
+        """
+        return self.driver_adapter.is_element_displayed(strategy, locator, root=self.root)
