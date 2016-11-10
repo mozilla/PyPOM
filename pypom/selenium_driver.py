@@ -12,7 +12,6 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import (
     Firefox,
-    FirefoxProfile,
     Chrome,
     Ie,
     Edge,
@@ -134,7 +133,6 @@ def register():
         Selenium,
         class_implements=[
             Firefox,
-            FirefoxProfile,
             Chrome,
             Ie,
             Edge,
