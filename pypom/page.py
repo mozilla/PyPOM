@@ -18,15 +18,15 @@ class Page(WebView):
 
     Used as a base class for your project's page objects.
 
-    :param driver: WebDriver like object.
+    :param driver: A driver.
     :param base_url: (optional) Base URL.
     :param timeout: (optional) Timeout used for explicit waits. Defaults to ``10``.
     :param url_kwargs: (optional) Keyword arguments used when formatting the :py:attr:`seed_url`.
-    :type driver: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or other supported drivers like http://splinter.readthedocs.io/en/latest/index.html#drivers
+    :type driver: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or :py:class:`~splinter.browser.Browser`
     :type base_url: str
     :type timeout: int
 
-    Usage::
+    Usage (Selenium)::
 
       from pypom import Page
       from selenium.webdriver import Firefox
@@ -35,6 +35,18 @@ class Page(WebView):
           URL_TEMPLATE = 'https://www.mozilla.org/{locale}'
 
       driver = Firefox()
+      page = Mozilla(driver, locale='en-US')
+      page.open()
+
+    Usage (Splinter)::
+
+      from pypom import Page
+      from splinter import Browser
+
+      class Mozilla(Page):
+          URL_TEMPLATE = 'https://www.mozilla.org/{locale}'
+
+      driver = Browser()
       page = Mozilla(driver, locale='en-US')
       page.open()
 
@@ -97,16 +109,16 @@ class Page(WebView):
     def wait_for_page_to_load(self):
         """Wait for the page to load.
 
-        By default Selenium will try to wait for any page loads to be complete,
-        however it's not uncommon for it to return early. To address this you
-        can override :py:func:`wait_for_page_to_load` and implement an explicit
-        wait for a condition that evaluates to ``True`` when the page has
-        finished loading.
+        By default the driver will try to wait for any page loads to be
+        complete, however it's not uncommon for it to return early. To address
+        this you can override :py:func:`wait_for_page_to_load` and implement an
+        explicit wait for a condition that evaluates to ``True`` when the page
+        has finished loading.
 
         :return: The current page object.
         :rtype: :py:class:`Page`
 
-        Usage::
+        Usage (Selenium)::
 
           from pypom import Page
           from selenium.webdriver.common.by import By
@@ -116,6 +128,16 @@ class Page(WebView):
               def wait_for_page_to_load(self):
                   body = self.find_element(By.TAG_NAME, 'body')
                   self.wait.until(lambda s: 'loaded' in body.get_attribute('class'))
+
+        Usage (Splinter)::
+
+          from pypom import Page
+
+          class Mozilla(Page):
+
+              def wait_for_page_to_load(self):
+                  body = self.find_element('tag', 'body')
+                  self.wait.until(lambda s: 'loaded' in body['class']))
 
         Examples::
 

@@ -3,6 +3,30 @@ User Guide
 
 .. contents:: :depth: 3
 
+Drivers
+-------
+
+PyPOM requires a driver object to be instantiated, and supports multiple driver
+types. The examples in this guide will assume that you have a driver instance.
+
+Selenium
+~~~~~~~~
+
+To instantiate a Selenium_ driver you will need a
+:py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object::
+
+  from selenium.webdriver import Firefox
+  driver = Firefox()
+
+Splinter
+~~~~~~~~
+
+To instantiate a Splinter_ driver you will need a :py:class:`~splinter.Browser`
+object::
+
+  from splinter import Browser
+  driver = Browser()
+
 Pages
 -----
 
@@ -11,31 +35,15 @@ simulating user actions, and providing properties that return state from the
 page. The :py:class:`~pypom.page.Page` class provided by PyPOM provides a
 simple implementation that can be sub-classed to apply to your project.
 
-PyPOM supports both Selenium_ or Splinter_ (basically a Selenium wrapper with
-a more usable API).
-
-To instantiate a page object with PyPOM with Selenium_ you will need a Selenium_
-:py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object. The
-following very simple example opens the Mozilla website in Firefox, and
-instantiates a page object representing the landing page::
+The following very simple example instantiates a page object representing the
+landing page of the Mozilla website::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
 
   class Mozilla(Page):
       pass
 
-  driver = Firefox()
-  driver.get('https://www.mozilla.org')
   page = Mozilla(driver)
-
-If you are using Splinter_ you have to use a :py:class:`~splinter.Browser` object
-as driver::
-
-  from splinter import Browser
-
-  driver = Browser()
-
 
 If a page has a seed URL then you can call the :py:func:`~pypom.page.Page.open`
 function to open the page in the browser. There are a number of ways to specify
@@ -49,16 +57,12 @@ is provided, then calling :py:func:`~pypom.page.Page.open` will open this base
 URL::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
 
   class Mozilla(Page):
       pass
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
   page = Mozilla(driver, base_url).open()
-
-The same behaviour occurs using a Splinter_ driver.
 
 URL templates
 ~~~~~~~~~~~~~
@@ -69,13 +73,11 @@ provided). In the following example the URL https://www.mozilla.org/about/ will
 be opened::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
 
   class Mozilla(Page):
       URL_TEMPLATE = '/about/'
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
   page = Mozilla(driver, base_url).open()
 
 As this is a template, any additional keyword arguments passed when
@@ -83,22 +85,18 @@ instantiating the page object will attempt to resolve any placeholders. The
 following example adds a locale to the URL::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
 
   class Mozilla(Page):
       URL_TEMPLATE = '/{locale}/about/'
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
   page = Mozilla(driver, base_url, locale='de').open()
-
-The same behaviour occurs using a Splinter_ driver.
 
 Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever Selenium_ or Splinter_ detects that a page is loading, it does it's best to block
-until it's complete. Unfortunately, as Seleniun does not know your application,
+Whenever a driver detects that a page is loading, it does it's best to block
+until it's complete. Unfortunately, as the driver does not know your application,
 it's quite common for it to return earlier than a user would consider the page
 to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
 function can be overridden and customised for your project's needs by adding
@@ -155,7 +153,13 @@ Repeating regions
 
 Page regions are useful when you have multiple items on a page that share the
 same characteristics, such as a list of search results. By creating a page
-region, you can interact with any of these items in a common way::
+region, you can interact with any of these items in a common way:
+
+The following example uses Selenium_ to locate all results on a page and return
+a list of ``Results`` regions. This can be used to determine the number of
+results, and each result can be accessed from this list for further state or
+interactions. Refer to `locating elements`_ for more information on how to
+write locators for your driver::
 
   from pypom import Page, Region
   from selenium.webdriver.common.by import By
@@ -175,18 +179,6 @@ region, you can interact with any of these items in a common way::
           def name(self):
               return self.find_element(*self._name_locator).text
 
-The above example provides a ``results`` property on the page class. When
-called, this locates all results on the page and returns a list of ``Result``
-regions. This can be used to determine the number of results, and each result
-can be accessed from this list for further state or interactions.
-
-If you are using Splinter_ you have to use a different data structure for
-selectors. For example::
-
-  _result_locator = ('css', '.result')
-
-More info about supported selectors in the `Locators` section.
-
 Shared regions
 ~~~~~~~~~~~~~~
 
@@ -194,7 +186,12 @@ Pages with common characteristics can use regions to avoid duplication.
 Examples of this include page headers, navigation menus, login forms, and
 footers. These regions can either be defined in a base page object that is
 inherited by the pages that contain the region, or they can exist in their own
-module::
+module:
+
+In the following example, any page objects that extend ``Base`` will inherit
+the ``header`` property, and be able to check if it's displayed. Refer to
+`locating elements`_ for more information on how to write locators for your
+driver::
 
   from pypom import Page, Region
   from selenium.webdriver.common.by import By
@@ -210,11 +207,6 @@ module::
 
           def is_displayed(self):
               return self.root.is_displayed()
-
-In the above example, and page objects that extend ``Base`` will inherit the
-``header`` property, and be able to check if it's displayed.
-
-Same behaviour with Splinter_ using a different selector structure.
 
 Waiting for regions to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -239,19 +231,22 @@ Other things to wait for might include when elements are displayed or enabled,
 or when an element has a particular class. This will be very dependent on your
 application.
 
-Locators
---------
+Locating elements
+-----------------
 
-In order to locate elements you need to specify both a locator strategy and the
-locator itself. The :py:class:`~selenium.webdriver.common.by.By` class covers
-the common locator strategies. A suggested approach is to store your locators
-at the top of your page/region classes. Ideally these should be preceeded with
-a single underscore to indicate that they're primarily reserved for internal
-use. These attributes can be stored as a two item tuple containing both the
-strategy and locator, and can then be unpacked when passed to a method that
-requires the arguments to be separated.
+Each driver has its own approach to locating elements. A suggested approach is
+to store your locators at the top of your page/region classes. Ideally these
+should be preceeded with a single underscore to indicate that they're primarily
+reserved for internal use. These attributes can be stored as a two item tuple
+containing both the strategy and locator, and can then be unpacked when passed
+to a method that requires the arguments to be separated.
 
-The following example shows a locator being defined and used in a page object::
+Selenium
+~~~~~~~~
+
+The :py:class:`~selenium.webdriver.common.by.By` class covers the common
+locator strategies for Selenium_. The following example shows a locator being
+defined and used in a page object::
 
   from pypom import Page
   from selenium.webdriver.common.by import By
@@ -263,8 +258,10 @@ The following example shows a locator being defined and used in a page object::
           logo = self.find_element(*self._logo_locator)
           self.wait.until(lambda s: logo.is_displayed())
 
-With Splinter_ instead of `By.ID` you should use `id`. For a full list
-of supported locator strategies see here:
+Splinter
+~~~~~~~~
+
+The available locator strategies for Splinter_ are:
 
 * name
 * id
@@ -273,6 +270,18 @@ of supported locator strategies see here:
 * text
 * value
 * tag
+
+The following example shows a locator being defined and used in a page object::
+
+    from pypom import Page
+    from selenium.webdriver.common.by import By
+
+    class Mozilla(Page):
+        _logo_locator = ('id', 'logo')
+
+        def wait_for_page_to_load(self):
+            logo = self.find_element(*self._logo_locator)
+            self.wait.until(lambda s: logo.is_displayed())
 
 Explicit waits
 --------------
@@ -286,8 +295,10 @@ we didn't wait for the button to become enabled we may try clicking on it too
 early, and nothing would happen. Another example of where explicit waits are
 common is when `waiting for pages to load`_ or `waiting for regions to load`_.
 
-The following example demonstrates a wait that is necessary after checking a
-box that causes a button to become enabled::
+The following example uses Selenium_ to demonstrate a wait that is necessary
+after checking a box that causes a button to become enabled. Refer to
+`locating elements`_ for more information on how to write locators for your
+driver::
 
   from pypom import Page
   from selenium.webdriver.common.by import By
@@ -305,8 +316,6 @@ You can either specify a timeout by passing the optional ``timeout`` keyword
 argument when instantiating a page object, or you can override the
 :py:func:`~pypom.page.Page.__init__` method if you want your timeout to be
 inherited by a base project page class.
-
-The same behaviour occurs usign Splinter_ using `id` as selector strateby.
 
 .. note::
 

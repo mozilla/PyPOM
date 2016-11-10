@@ -13,9 +13,9 @@ class Region(WebView):
     :param page: Page object this region appears in.
     :param root: (optional) element that serves as the root for the region.
     :type page: :py:class:`~.page.Page`
-    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`, :py:class:`~splinter.driver.webdriver.WebDriverElement` or any third party supported web element if you register your own plugin implementation
+    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement` or :py:class:`~splinter.driver.webdriver.WebDriverElement`
 
-    Usage::
+    Usage (Selenium)::
 
       from pypom import Page, Region
       from selenium.webdriver import Firefox
@@ -36,6 +36,29 @@ class Region(WebView):
                   self.find_element(*self._submit_locator).click()
 
       driver = Firefox()
+      page = Mozilla(driver).open()
+      page.newsletter.sign_up()
+
+    Usage (Splinter)::
+
+      from pypom import Page, Region
+      from splinter import Browser
+
+      class Mozilla(Page):
+          URL_TEMPLATE = 'https://www.mozilla.org/'
+
+          @property
+          def newsletter(self):
+              return Newsletter(self)
+
+          class Newsletter(Region):
+              _root_locator = ('id', 'newsletter-form')
+              _submit_locator = ('id', 'footer_email_submit')
+
+              def sign_up(self):
+                  self.find_element(*self._submit_locator).click()
+
+      driver = Browser()
       page = Mozilla(driver).open()
       page.newsletter.sign_up()
 
@@ -75,7 +98,7 @@ class Region(WebView):
         :return: The current page region object.
         :rtype: :py:class:`Region`
 
-        Usage::
+        Usage (Selenium)::
 
           from pypom import Page, Region
           from selenium.webdriver.common.by import By
@@ -93,18 +116,35 @@ class Region(WebView):
                   def wait_for_region_to_load(self):
                       self.wait.until(lambda s: 'loaded' in self.root.get_attribute('class'))
 
+        Usage (Splinter)::
+
+          from pypom import Page, Region
+
+          class Mozilla(Page):
+              URL_TEMPLATE = 'https://www.mozilla.org/'
+
+              @property
+              def newsletter(self):
+                  return Newsletter(self)
+
+              class Newsletter(Region):
+                  _root_locator = ('id', 'newsletter-form')
+
+                  def wait_for_region_to_load(self):
+                      self.wait.until(lambda s: 'loaded' in self.root['class'])
+
         """
         return self
 
     def find_element(self, strategy, locator):
         """Finds an element on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` or :py:attr:`~pypom.splinter_driver.ALLOWED_STRATEGIES`.
         :param locator: Location of target element.
         :type strategy: str
         :type locator: str
-        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
-        :rtype: selenium.webdriver.remote.webelement.WebElement or splinter.driver.webdriver.WebDriverElement
+        :return: An element.
+        :rytpe: :py:class:`~selenium.webdriver.remote.webelement.WebElement` or :py:class:`~splinter.driver.webdriver.WebDriverElement`
 
         """
         return self.driver_adapter.find_element(strategy, locator, root=self.root)
@@ -112,11 +152,11 @@ class Region(WebView):
     def find_elements(self, strategy, locator):
         """Finds elements on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` or :py:attr:`~pypom.splinter_driver.ALLOWED_STRATEGIES`.
         :param locator: Location of target elements.
         :type strategy: str
         :type locator: str
-        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` or :py:class:`splinter.element_list.ElementList`
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` or :py:class:`~splinter.element_list.ElementList`
         :rtype: list
 
         """
@@ -125,7 +165,7 @@ class Region(WebView):
     def is_element_present(self, strategy, locator):
         """Checks whether an element is present.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` or :py:attr:`~pypom.splinter_driver.ALLOWED_STRATEGIES`.
         :param locator: Location of target element.
         :type strategy: str
         :type locator: str
@@ -138,7 +178,7 @@ class Region(WebView):
     def is_element_displayed(self, strategy, locator):
         """Checks whether an element is displayed.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values or pypom.splinter_driver.ALLOWED_STRATEGIES.
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` or :py:attr:`~pypom.splinter_driver.ALLOWED_STRATEGIES`.
         :param locator: Location of target element.
         :type strategy: str
         :type locator: str

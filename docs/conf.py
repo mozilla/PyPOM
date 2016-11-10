@@ -37,7 +37,9 @@ extensions = [
 ]
 
 # intersphinx mappings
-intersphinx_mapping = {'selenium': ('http://seleniumhq.github.io/selenium/docs/api/py/', None)}
+intersphinx_mapping = {
+    'selenium': ('http://seleniumhq.github.io/selenium/docs/api/py/', None),
+    'splinter': ('https://splinter.readthedocs.io/en/latest/', None)}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
