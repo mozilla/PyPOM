@@ -3,7 +3,7 @@ from setuptools import setup
 splinter_requires = ['splinter']
 
 setup(name='PyPOM',
-      version='1.0',
+      version='1.1.0',
       description='python page object model for selenium',
       long_description=open('README.rst').read(),
       author='Dave Hunt',
