@@ -17,8 +17,8 @@ class WebView(object):
 
     @property
     def selenium(self):
-        """ Backwards compatibility attribute """
-        warn("selenium attribute deprecated. Use driver instead")
+        """Backwards compatibility attribute"""
+        warn('use driver instead', DeprecationWarning)
         return self.driver
 
     def find_element(self, strategy, locator):
