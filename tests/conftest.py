@@ -30,7 +30,7 @@ def page(driver, base_url):
     return Page(driver, base_url)
 
 
-@pytest.fixture(params=[ISelenium, ISplinter])
+@pytest.fixture(params=[ISelenium, ISplinter], ids=['selenium', 'splinter'])
 def driver_interface(request):
     return request.param
 
