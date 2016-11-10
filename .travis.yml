@@ -8,6 +8,7 @@ env:
   - TOXENV=pypy3
   - TOXENV=coverage
   - TOXENV=flake8
+  - TOXENV=docs
 install:
   - pip install tox
 script:
