@@ -95,7 +95,7 @@ following example adds a locale to the URL::
 Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever a driver detects that a page is loading, it does it's best to block
+Whenever a driver detects that a page is loading, it does its best to block
 until it's complete. Unfortunately, as the driver does not know your application,
 it's quite common for it to return earlier than a user would consider the page
 to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
