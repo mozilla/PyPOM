@@ -1,7 +1,7 @@
 Release Notes
 =============
 
-**1.1.0 (2016-11-10)**
+**1.1.0 (2016-11-17)**
 
 * Added support for Splinter
 
