@@ -20,7 +20,19 @@ matrix:
     env: TOXENV=flake8
   - python: 3.5
     env: TOXENV=docs
+  - python: 3.5
+    env: DEPLOY=1
 install:
   - pip install tox-travis
 script:
   - tox
+deploy:
+  provider: pypi
+  user: davehunt
+  password:
+    secure: "DNLv5NtW8M1vL+1F3aQlZqaZmPcBuLZID449upMo1OvLTx4w0ridE3YoBVO3/cMbk8JjonnpfUPaz7HGvB5UHFhCnX/UhYHqiP2JZOhxRF2RaDl6vqHvhMRjZPlGGev9A86b87HERHKfdSmYk2BW63cHSwGhKjuyGAM61VN7cSqZ+J6xPAns2WJOqUrzbZqw+ac4VPqnQGpb6BJKLzeADK5v5+ZLHdK1Q7HWWgJbvJBl4GYXGzoZBVbdDLJmNx1MWL+t4VrkFfkOABzOzrVdXwi0Yh2d3Bu6Bl/EZEPbDkyYiWhyep5M9rVOzRNsMbSs5hM3QiMAlBFa97trNQPS3pX/ggfpOelgo7rFJfzZzPQYfrVRPta6UWpLiObDIzQMTrY9QT0R8ckifnfPncVnGC3JgtqbVnc1lBofbQhkx72rl0zHeTqkMpV0z/HzTeXuBR2Roxe+om7uyZS1yC6sc2uElxtYyJ+M+PAKBWk84iY98U2WlDbn68LnPjP8hiJCBYBrIBRjA1xSDRgnxoPK4lgLr7BvZIfudpRoFwnbTwkNe45GFm/i2CBqw521hy3X7WWrBz6OioFmh2GYXaYAYP+Gk/94fTw5nL1AGcgVZabyIa8TTdBbeemzfQSTOrvxttnmxRvpDBPU2r0cLOga8iNMbjJ1pyW9fhO1kP7FuCw="
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    repo: mozilla/PyPOM
+    condition: "$DEPLOY = 1"
