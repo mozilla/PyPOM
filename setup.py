@@ -3,7 +3,7 @@ from setuptools import setup
 splinter_requires = ['splinter']
 
 setup(name='PyPOM',
-      version='1.1.0',
+      use_scm_version=True,
       description='python page object model for selenium',
       long_description=open('README.rst').read(),
       author='Dave Hunt',
@@ -14,6 +14,7 @@ setup(name='PyPOM',
                         'zope.component',
                         'selenium',
                         ],
+      setup_requires=['setuptools_scm'],
       extras_require={
           'splinter': splinter_requires,
       },
