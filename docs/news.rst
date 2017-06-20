@@ -1,7 +1,7 @@
 Release Notes
 =============
 
-**1.2.0 (unreleased)**
+**1.2.0 (2017-06-20)**
 
 * Dropped support for Python 2.6
 
