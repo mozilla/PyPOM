@@ -4,7 +4,7 @@ PyPOM - Python Page Object Model
 PyPOM, or Python Page Object Model, is a Python library that provides a base
 page object model for use with Selenium_ or Splinter_ functional tests.
 
-It is tested on Python 2.7 through 3.5.
+It is tested on Python 2.7 and 3.6.
 
 Contributions are welcome. Feel free to fork_ and contribute!
 
