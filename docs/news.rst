@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+**1.2.0 (unreleased)**
+
+* Dropped support for Python 2.6
+
 **1.1.1 (2016-11-21)**
 
 * Fixed packaging of ``pypom.interfaces``

@@ -4,7 +4,7 @@ Installation
 Requirements
 ------------
 
-PyPOM requires Python >= 2.6.
+PyPOM requires Python >= 2.7.
 
 Install PyPOM
 -----------------------
