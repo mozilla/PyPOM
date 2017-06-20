@@ -1,3 +1,3 @@
 -e.[splinter]
-pytest==3.1.1
+pytest==3.1.2
 mock==2.0.0
