@@ -4,13 +4,10 @@
 
 import random
 
-from mock import (
-    Mock,
-    MagicMock,
-    patch,
-)
-from pypom import Region
 import pytest
+from mock import MagicMock, Mock, patch
+
+from pypom import Region
 
 
 class TestNoRootSplinter:

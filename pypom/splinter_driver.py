@@ -3,20 +3,16 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from zope.interface import (
-    implementer,
-    Interface,
-)
-
-from splinter.driver.webdriver.firefox import WebDriver as FirefoxWebDriver
-from splinter.driver.webdriver.remote import WebDriver as RemoteWebDriver
 from splinter.driver.webdriver.chrome import WebDriver as ChromeWebDriver
+from splinter.driver.webdriver.firefox import WebDriver as FirefoxWebDriver
 from splinter.driver.webdriver.phantomjs import WebDriver as PhantomJSWebDriver
+from splinter.driver.webdriver.remote import WebDriver as RemoteWebDriver
+from zope.interface import Interface, implementer
 
-from .interfaces import IDriver
 from .driver import registerDriver
-from .selenium_driver import Selenium
 from .exception import UsageError
+from .interfaces import IDriver
+from .selenium_driver import Selenium
 
 ALLOWED_STRATEGIES = [
     'name',
