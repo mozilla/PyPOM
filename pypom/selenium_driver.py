@@ -3,28 +3,14 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-from zope.interface import (
-    implementer,
-    Interface,
-)
-
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import (Android, BlackBerry, Chrome, Edge, Firefox, Ie,
+                                Opera, PhantomJS, Remote, Safari)
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver import (
-    Firefox,
-    Chrome,
-    Ie,
-    Edge,
-    Opera,
-    Safari,
-    BlackBerry,
-    PhantomJS,
-    Android,
-    Remote,
-)
+from zope.interface import Interface, implementer
 
-from .interfaces import IDriver
 from .driver import registerDriver
+from .interfaces import IDriver
 
 
 class ISelenium(Interface):

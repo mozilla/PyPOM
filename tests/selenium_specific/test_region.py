@@ -5,9 +5,7 @@
 import random
 
 import pytest
-from mock import (
-    Mock,
-)
+from mock import Mock
 
 from pypom import Region
 
