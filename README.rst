@@ -4,7 +4,7 @@ PyPOM
 PyPOM is a Python Page Object Model library for Selenium and Splinter tests.
 
 .. image:: https://img.shields.io/badge/license-MPL%202.0-blue.svg
-   :target: https://github.com/mozilla/PyPOM/blob/master/LICENSE
+   :target: https://github.com/mozilla/PyPOM/blob/master/LICENSE.txt
    :alt: License
 .. image:: https://img.shields.io/pypi/v/PyPOM.svg
    :target: https://pypi.python.org/pypi/PyPOM/
