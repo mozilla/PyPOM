@@ -8,9 +8,11 @@ from .exception import UsageError
 from .view import WebView
 
 if sys.version_info >= (3,):
-    from urllib.parse import urljoin
+    import urllib.parse as urlparse
+    from urllib.parse import urlencode
 else:
-    from urlparse import urljoin
+    import urlparse
+    from urllib import urlencode
 
 
 class Page(WebView):
@@ -21,7 +23,7 @@ class Page(WebView):
     :param driver: A driver.
     :param base_url: (optional) Base URL.
     :param timeout: (optional) Timeout used for explicit waits. Defaults to ``10``.
-    :param url_kwargs: (optional) Keyword arguments used when formatting the :py:attr:`seed_url`.
+    :param url_kwargs: (optional) Keyword arguments used when generating the :py:attr:`seed_url`.
     :type driver: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or :py:class:`~splinter.browser.Browser`
     :type base_url: str
     :type timeout: int
@@ -85,10 +87,25 @@ class Page(WebView):
         :rtype: str
 
         """
+        url = self.base_url
         if self.URL_TEMPLATE is not None:
-            return urljoin(self.base_url,
-                           self.URL_TEMPLATE.format(**self.url_kwargs))
-        return self.base_url
+            url = urlparse.urljoin(self.base_url,
+                                   self.URL_TEMPLATE.format(**self.url_kwargs))
+
+        if not url:
+            return None
+
+        params = {}
+        for k, v in self.url_kwargs.items():
+            if '{{{}}}'.format(k) not in str(self.URL_TEMPLATE):
+                params[k] = v
+
+        url_parts = list(urlparse.urlparse(url))
+        query = dict(urlparse.parse_qsl(url_parts[4]))
+        query.update(params)
+
+        url_parts[4] = urlencode(query)
+        return urlparse.urlunparse(url_parts)
 
     def open(self):
         """Open the page.

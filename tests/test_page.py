@@ -22,7 +22,7 @@ def test_seed_url_absolute(base_url, driver):
     assert url_template == page.seed_url
 
 
-def test_seed_url_absolute_keywords(base_url, driver):
+def test_seed_url_absolute_keywords_tokens(base_url, driver):
     value = str(random.random())
     absolute_url = 'https://www.test.com/'
 
@@ -32,18 +32,53 @@ def test_seed_url_absolute_keywords(base_url, driver):
     assert absolute_url + value == page.seed_url
 
 
+def test_seed_url_absolute_keywords_params(base_url, driver):
+    value = str(random.random())
+    absolute_url = 'https://www.test.com/'
+
+    class MyPage(Page):
+        URL_TEMPLATE = absolute_url
+    page = MyPage(driver, base_url, key=value)
+    assert '{}?key={}'.format(absolute_url, value) == page.seed_url
+
+
+def test_seed_url_absolute_keywords_tokens_and_params(base_url, driver):
+    values = (str(random.random()), str(random.random()))
+    absolute_url = 'https://www.test.com/'
+
+    class MyPage(Page):
+        URL_TEMPLATE = absolute_url + '?key1={key1}'
+    page = MyPage(driver, base_url, key1=values[0], key2=values[1])
+    assert '{}?key1={}&key2={}'.format(absolute_url, *values) == page.seed_url
+
+
 def test_seed_url_empty(driver):
     page = Page(driver)
     assert page.seed_url is None
 
 
-def test_seed_url_keywords(base_url, driver):
+def test_seed_url_keywords_tokens(base_url, driver):
     value = str(random.random())
 
     class MyPage(Page):
         URL_TEMPLATE = '{key}'
     page = MyPage(driver, base_url, key=value)
     assert base_url + value == page.seed_url
+
+
+def test_seed_url_keywords_params(base_url, driver):
+    value = str(random.random())
+    page = Page(driver, base_url, key=value)
+    assert '{}?key={}'.format(base_url, value) == page.seed_url
+
+
+def test_seed_url_keywords_keywords_and_params(base_url, driver):
+    values = (str(random.random()), str(random.random()))
+
+    class MyPage(Page):
+        URL_TEMPLATE = '?key1={key1}'
+    page = MyPage(driver, base_url, key1=values[0], key2=values[1])
+    assert '{}?key1={}&key2={}'.format(base_url, *values) == page.seed_url
 
 
 def test_seed_url_prepend(base_url, driver):

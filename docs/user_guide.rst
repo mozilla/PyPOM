@@ -110,8 +110,8 @@ URL templates
 
 By setting a value for :py:attr:`~pypom.page.Page.URL_TEMPLATE`, pages can
 specify either an absolute URL or one that is relative to the base URL (when
-provided). In the following example the URL https://www.mozilla.org/about/ will
-be opened::
+provided). In the following example, the URL https://www.mozilla.org/about/
+will be opened::
 
   from pypom import Page
 
@@ -122,8 +122,8 @@ be opened::
   page = Mozilla(driver, base_url).open()
 
 As this is a template, any additional keyword arguments passed when
-instantiating the page object will attempt to resolve any placeholders. The
-following example adds a locale to the URL::
+instantiating the page object will attempt to resolve any placeholders. In the
+following example, the URL https://www.mozilla.org/de/about/ will be opened::
 
   from pypom import Page
 
@@ -132,6 +132,21 @@ following example adds a locale to the URL::
 
   base_url = 'https://www.mozilla.org'
   page = Mozilla(driver, base_url, locale='de').open()
+
+URL parameters
+~~~~~~~~~~~~~~
+
+Any keyword arguments provided that are not used as placeholders in the URL
+template are added as query string parameters. In the following example, the
+URL https://developer.mozilla.org/fr/search?q=bold&topic=css will be opened::
+
+  from pypom import Page
+
+  class Search(Page):
+      URL_TEMPLATE = '/{locale}/search'
+
+  base_url = 'https://developer.mozilla.org/'
+  page = Search(driver, base_url, locale='fr', q='bold', topic='css').open()
 
 Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
