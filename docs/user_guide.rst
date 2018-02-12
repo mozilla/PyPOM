@@ -123,7 +123,7 @@ Regions
 -------
 
 Region objects represent one or more elements of a web page that are repeated
-mutliple times on a page, or shared between multiple web pages. They prevent
+multiple times on a page, or shared between multiple web pages. They prevent
 duplication, and can improve the readability and maintainability of your page
 objects.
 
@@ -156,28 +156,38 @@ same characteristics, such as a list of search results. By creating a page
 region, you can interact with any of these items in a common way:
 
 The following example uses Selenium_ to locate all results on a page and return
-a list of ``Results`` regions. This can be used to determine the number of
+a list of ``Result`` regions. This can be used to determine the number of
 results, and each result can be accessed from this list for further state or
 interactions. Refer to `locating elements`_ for more information on how to
-write locators for your driver::
+write locators for your driver:
 
-  from pypom import Page, Region
-  from selenium.webdriver.common.by import By
+.. literalinclude:: examples/repeated_regions.html
+   :language: html
+   :emphasize-lines: 6-23
 
-  class Results(Page):
-      _result_locator = (By.CLASS_NAME, 'result')
+.. literalinclude:: examples/repeated_regions.py
+   :language: python
+   :emphasize-lines: 6-6
+   :lines: 5-22
 
-      @property
-      def results(self):
-          results = self.find_elements(*self._result_locator)
-          return [self.Result(el) for el in results]
+Nested regions
+~~~~~~~~~~~~~~
 
-      class Result(Region):
-          _name_locator = (By.CLASS_NAME, 'name')
+Regions can be nested inside other regions (i.e. a menu region with multiple entry
+regions). In the following example a main page contains two menu regions that
+include multiple repeated entry regions:
 
-          @property
-          def name(self):
-              return self.find_element(*self._name_locator).text
+.. literalinclude:: examples/nested_regions.html
+   :language: html
+
+As a region requires a page object to be passed you need
+to pass ``self.page`` when instantiating nested regions:
+
+.. literalinclude:: examples/nested_regions.py
+   :language: python
+   :emphasize-lines: 5-6,10-11,18-18
+   :lines: 5-30
+
 
 Shared regions
 ~~~~~~~~~~~~~~
