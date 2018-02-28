@@ -1,6 +1,12 @@
 Release Notes
 =============
 
+**1.3.0 (2018-02-28)**
+
+* Added support for EventFiringWebDriver
+
+  * Thanks to `@Greums <https://github.com/Greums>`_ for the PR
+
 **1.2.0 (2017-06-20)**
 
 * Dropped support for Python 2.6
