@@ -67,7 +67,7 @@ class Region(WebView):
     _root_locator = None
 
     def __init__(self, page, root=None):
-        super(Region, self).__init__(page.driver, page.timeout)
+        super(Region, self).__init__(page.driver, page.timeout, pm=page.pm)
         self._root = root
         self.page = page
         self.wait_for_region_to_load()
@@ -87,53 +87,9 @@ class Region(WebView):
         return self._root
 
     def wait_for_region_to_load(self):
-        """Wait for the page region to load.
-
-        You may need to initialise your page region before it's ready for you
-        to interact with it. If this is the case, you can override
-        :py:func:`wait_for_region_to_load` and implement an explicit wait for a
-        condition that evaluates to ``True`` when the region has finished
-        loading.
-
-        :return: The current page region object.
-        :rtype: :py:class:`Region`
-
-        Usage (Selenium)::
-
-          from pypom import Page, Region
-          from selenium.webdriver.common.by import By
-
-          class Mozilla(Page):
-              URL_TEMPLATE = 'https://www.mozilla.org/'
-
-              @property
-              def newsletter(self):
-                  return Newsletter(self)
-
-              class Newsletter(Region):
-                  _root_locator = (By.ID, 'newsletter-form')
-
-                  def wait_for_region_to_load(self):
-                      self.wait.until(lambda s: 'loaded' in self.root.get_attribute('class'))
-
-        Usage (Splinter)::
-
-          from pypom import Page, Region
-
-          class Mozilla(Page):
-              URL_TEMPLATE = 'https://www.mozilla.org/'
-
-              @property
-              def newsletter(self):
-                  return Newsletter(self)
-
-              class Newsletter(Region):
-                  _root_locator = ('id', 'newsletter-form')
-
-                  def wait_for_region_to_load(self):
-                      self.wait.until(lambda s: 'loaded' in self.root['class'])
-
-        """
+        """Wait for the page region to load."""
+        self.wait.until(lambda _: self.loaded)
+        self.pm.hook.pypom_after_wait_for_region_to_load(region=self)
         return self
 
     def find_element(self, strategy, locator):
@@ -187,3 +143,55 @@ class Region(WebView):
 
         """
         return self.driver_adapter.is_element_displayed(strategy, locator, root=self.root)
+
+    @property
+    def loaded(self):
+        """Loaded state of the page region.
+
+        You may need to initialise your page region before it's ready for you
+        to interact with it. If this is the case, you can override
+        :py:attr:`loaded` to return ``True`` when the region has finished
+        loading.
+
+        :return: ``True`` if page is loaded, else ``False``.
+        :rtype: bool
+
+        Usage (Selenium)::
+
+          from pypom import Page, Region
+          from selenium.webdriver.common.by import By
+
+          class Mozilla(Page):
+              URL_TEMPLATE = 'https://www.mozilla.org/'
+
+              @property
+              def newsletter(self):
+                  return Newsletter(self)
+
+              class Newsletter(Region):
+                  _root_locator = (By.ID, 'newsletter-form')
+
+                  @property
+                  def loaded(self):
+                      return 'loaded' in self.root.get_attribute('class')
+
+        Usage (Splinter)::
+
+          from pypom import Page, Region
+
+          class Mozilla(Page):
+              URL_TEMPLATE = 'https://www.mozilla.org/'
+
+              @property
+              def newsletter(self):
+                  return Newsletter(self)
+
+              class Newsletter(Region):
+                  _root_locator = ('id', 'newsletter-form')
+
+                  @property
+                  def loaded(self):
+                      return 'loaded' in self.root['class']
+
+        """
+        return True

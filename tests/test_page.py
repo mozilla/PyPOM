@@ -77,6 +77,18 @@ def test_open_timeout(base_url, driver):
         page.open()
 
 
+def test_open_timeout_loaded(base_url, driver):
+
+    class MyPage(Page):
+        @property
+        def loaded(self):
+            return False
+    page = MyPage(driver, base_url, timeout=0)
+    from selenium.common.exceptions import TimeoutException
+    with pytest.raises(TimeoutException):
+        page.open()
+
+
 def test_wait_for_page(page, driver):
     assert isinstance(page.wait_for_page_to_load(), Page)
 
@@ -92,6 +104,18 @@ def test_wait_for_page_timeout(base_url, driver):
         page.wait_for_page_to_load()
 
 
+def test_wait_for_page_timeout_loaded(base_url, driver):
+
+    class MyPage(Page):
+        @property
+        def loaded(self):
+            return False
+    page = MyPage(driver, base_url, timeout=0)
+    from selenium.common.exceptions import TimeoutException
+    with pytest.raises(TimeoutException):
+        page.wait_for_page_to_load()
+
+
 def test_wait_for_page_empty_base_url(driver):
     assert isinstance(Page(driver).wait_for_page_to_load(), Page)
 
@@ -100,3 +124,7 @@ def test_bwc_selenium(page, driver_interface):
     """ Backwards compatibility with old selenium attribute """
     driver = page.selenium
     assert driver == page.driver
+
+
+def test_loaded(page, driver):
+    assert page.loaded is True

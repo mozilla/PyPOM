@@ -23,3 +23,11 @@ Region
 
 .. autoclass:: Region
    :inherited-members:
+
+.. _hooks:
+
+Hooks
+-----
+
+.. automodule:: pypom.hooks
+   :members:

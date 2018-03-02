@@ -2,17 +2,25 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from pluggy import PluginManager
 from warnings import warn
 
 from .interfaces import IDriver
+from pypom import hooks
 
 
 class WebView(object):
 
-    def __init__(self, driver, timeout):
+    def __init__(self, driver, timeout, pm=None):
         self.driver = driver
         self.driver_adapter = IDriver(driver)
         self.timeout = timeout
+        self.pm = pm
+        if self.pm is None:
+            self.pm = PluginManager('pypom', implprefix='pypom_')
+            self.pm.add_hookspecs(hooks)
+            self.pm.load_setuptools_entrypoints('pypom.plugin')
+            self.pm.check_pending()
         self.wait = self.driver_adapter.wait_factory(self.timeout)
 
     @property

@@ -3,6 +3,47 @@ User Guide
 
 .. contents:: :depth: 3
 
+Upgrading to 2.0
+----------------
+
+Plugin support was introduced in v2.0, and if you're upgrading from an earlier
+version you may need to make some changes to take advantage of any plugins.
+Before this version, to implement a custom wait for pages/regions to finish
+loading it was necessary to implement ``wait_for_page_to_load`` or
+``wait_for_region_to_load``. If you haven't implemented either of these, you
+don't need to do anything to upgrade. If you have, then whilst your custom
+waits will still work, we now support plugins that can be triggered after a
+page/region load, and these calls are made from the base classes. By overriding
+the default behaviour, you may be missing out on triggering any plugin
+behaviours. Rather than having to remember to always call the same method from
+the parent, you can simply change your custom wait to a new ``loaded`` property
+that returns ``True`` when the page/region has loaded.
+
+So, if you have implemented your own
+:py:func:`~pypom.page.Page.wait_for_page_to_load` like this::
+
+  def wait_for_page_to_load(self):
+      self.wait.until(lambda s: self.seed_url in s.current_url)
+
+You will want to change it to use :py:attr:`~pypom.page.Page.loaded` like this::
+
+  @property
+  def loaded(self):
+      return self.seed_url in self.selenium.current_url
+
+Similarly, if you have implemented your own
+:py:func:`~pypom.region.Region.wait_for_region_to_load` like this::
+
+  def wait_for_region_to_load(self):
+      self.wait.until(lambda s: self.root.is_displayed())
+
+You will want to change it to use :py:attr:`~pypom.region.Region.loaded` like
+this::
+
+  @property
+  def loaded(self):
+      return self.root.is_displayed()
+
 Drivers
 -------
 
@@ -96,13 +137,14 @@ Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Whenever a driver detects that a page is loading, it does its best to block
-until it's complete. Unfortunately, as the driver does not know your application,
-it's quite common for it to return earlier than a user would consider the page
-to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
-function can be overridden and customised for your project's needs by adding
-suitable `explicit waits`_. This function is called by :py:func:`~pypom.page.Page.open`
-after loading the seed URL, and can be called directly by functions that cause
-a page to load.
+until it's complete. Unfortunately, as the driver does not know your
+application, it's quite common for it to return earlier than a user would
+consider the page to be ready. For this reason, the
+:py:attr:`~pypom.page.Page.loaded` property can be overridden and customised
+for your project's needs by returning ``True`` when the page has loaded. This
+property is polled by :py:func:`~pypom.page.Page.wait_for_page_to_load`, which
+is called by :py:func:`~pypom.page.Page.open` after loading the seed URL, and
+can be called directly by functions that cause a page to load.
 
 The following example waits for the seed URL to be in the current URL. You can
 use this so long as the URL is not rewritten or redirected by your
@@ -112,8 +154,9 @@ application::
 
   class Mozilla(Page):
 
-      def wait_for_page_to_load(self):
-          self.wait.until(lambda s: self.seed_url in s.current_url)
+      @property
+      def loaded(self):
+          return self.seed_url in self.selenium.current_url
 
 Other things to wait for might include when elements are displayed or enabled,
 or when an element has a particular class. This will be very dependent on your
@@ -221,10 +264,11 @@ driver::
 Waiting for regions to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :py:func:`~pypom.region.Region.wait_for_region_to_load` function can be
-overridden and customised for your project's needs by adding suitable
-`explicit waits`_ to ensure the region is ready for interaction. This function
-is called whenever a region is instantiated, and can be called directly by
+The :py:attr:`~pypom.region.Region.loaded` property function can be
+overridden and customised for your project's needs by returning ``True`` when
+the region has loaded to ensure it's ready for interaction. This property is
+polled by :py:attr:`~pypom.region.Region.wait_for_region_to_load`, which is
+called whenever a region is instantiated, and can be called directly by
 functions that a region to reload.
 
 The following example waits for an element within a page region to be
@@ -234,8 +278,9 @@ displayed::
 
   class Header(Region):
 
-      def wait_for_region_to_load(self):
-          self.wait.until(lambda s: self.root.is_displayed())
+      @property
+      def loaded(self):
+          return self.root.is_displayed()
 
 Other things to wait for might include when elements are displayed or enabled,
 or when an element has a particular class. This will be very dependent on your
@@ -264,9 +309,10 @@ defined and used in a page object::
   class Mozilla(Page):
       _logo_locator = (By.ID, 'logo')
 
-      def wait_for_page_to_load(self):
+      @property
+      def loaded(self):
           logo = self.find_element(*self._logo_locator)
-          self.wait.until(lambda s: logo.is_displayed())
+          return logo.is_displayed()
 
 Splinter
 ~~~~~~~~
@@ -289,9 +335,10 @@ The following example shows a locator being defined and used in a page object::
     class Mozilla(Page):
         _logo_locator = ('id', 'logo')
 
-        def wait_for_page_to_load(self):
+        @property
+        def loaded(self):
             logo = self.find_element(*self._logo_locator)
-            self.wait.until(lambda s: logo.is_displayed())
+            return logo.is_displayed()
 
 Explicit waits
 --------------

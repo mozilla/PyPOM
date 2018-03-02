@@ -107,16 +107,22 @@ class Page(WebView):
         raise UsageError('Set a base URL or URL_TEMPLATE to open this page.')
 
     def wait_for_page_to_load(self):
-        """Wait for the page to load.
+        """Wait for the page to load."""
+        self.wait.until(lambda _: self.loaded)
+        self.pm.hook.pypom_after_wait_for_page_to_load(page=self)
+        return self
+
+    @property
+    def loaded(self):
+        """Loaded state of the page.
 
         By default the driver will try to wait for any page loads to be
         complete, however it's not uncommon for it to return early. To address
-        this you can override :py:func:`wait_for_page_to_load` and implement an
-        explicit wait for a condition that evaluates to ``True`` when the page
-        has finished loading.
+        this you can override :py:attr:`loaded` to return ``True`` when the
+        page has finished loading.
 
-        :return: The current page object.
-        :rtype: :py:class:`Page`
+        :return: ``True`` if page is loaded, else ``False``.
+        :rtype: bool
 
         Usage (Selenium)::
 
@@ -125,9 +131,10 @@ class Page(WebView):
 
           class Mozilla(Page):
 
-              def wait_for_page_to_load(self):
+              @property
+              def loaded(self):
                   body = self.find_element(By.TAG_NAME, 'body')
-                  self.wait.until(lambda s: 'loaded' in body.get_attribute('class'))
+                  return 'loaded' in body.get_attribute('class')
 
         Usage (Splinter)::
 
@@ -135,14 +142,14 @@ class Page(WebView):
 
           class Mozilla(Page):
 
-              def wait_for_page_to_load(self):
+              def loaded(self):
                   body = self.find_element('tag', 'body')
-                  self.wait.until(lambda s: 'loaded' in body['class']))
+                  return 'loaded' in body['class']
 
         Examples::
 
             # wait for the seed_url value to be in the current URL
-            self.wait.until(lambda s: self.seed_url in s.current_url)
+            self.seed_url in self.selenium.current_url
 
         """
-        return self
+        return True

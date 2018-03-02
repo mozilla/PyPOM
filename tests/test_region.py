@@ -23,6 +23,17 @@ class TestWaitForRegion:
         with pytest.raises(TimeoutException):
             MyRegion(page)
 
+    def test_wait_for_region_timeout_loaded(self, page):
+
+        class MyRegion(Region):
+            @property
+            def loaded(self):
+                return False
+        page.timeout = 0
+        from selenium.common.exceptions import TimeoutException
+        with pytest.raises(TimeoutException):
+            MyRegion(page)
+
 
 class TestNoRoot:
 

@@ -18,6 +18,7 @@ Contributions are welcome. Feel free to fork_ and contribute!
 
    installing
    user_guide
+   plugins
    api
    development
    news
