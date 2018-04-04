@@ -42,6 +42,16 @@ def test_seed_url_absolute_keywords_params(base_url, driver):
     assert '{}?key={}'.format(absolute_url, value) == page.seed_url
 
 
+def test_seed_url_absolute_keywords_params_none(base_url, driver):
+    value = None
+    absolute_url = 'https://www.test.com/'
+
+    class MyPage(Page):
+        URL_TEMPLATE = absolute_url
+    page = MyPage(driver, base_url, key=value)
+    assert absolute_url == page.seed_url
+
+
 def test_seed_url_absolute_keywords_tokens_and_params(base_url, driver):
     values = (str(random.random()), str(random.random()))
     absolute_url = 'https://www.test.com/'
@@ -70,6 +80,42 @@ def test_seed_url_keywords_params(base_url, driver):
     value = str(random.random())
     page = Page(driver, base_url, key=value)
     assert '{}?key={}'.format(base_url, value) == page.seed_url
+
+
+def test_seed_url_keywords_params_space(base_url, driver):
+    value = 'a value'
+    page = Page(driver, base_url, key=value)
+    assert '{}?key={}'.format(base_url, 'a+value') == page.seed_url
+
+
+def test_seed_url_keywords_params_special(base_url, driver):
+    value = 'mozilla&co'
+    page = Page(driver, base_url, key=value)
+    assert '{}?key={}'.format(base_url, 'mozilla%26co') == page.seed_url
+
+
+def test_seed_url_keywords_multiple_params(base_url, driver):
+    value = ('foo', 'bar',)
+    page = Page(driver, base_url, key=value)
+    seed_url = page.seed_url
+    assert 'key={}'.format(value[0]) in seed_url
+    assert 'key={}'.format(value[1]) in seed_url
+    import re
+    assert re.match(
+        '{}\?key=(foo|bar)&key=(foo|bar)'.format(base_url),
+        seed_url)
+
+
+def test_seed_url_keywords_multiple_params_special(base_url, driver):
+    value = ('foo', 'mozilla&co',)
+    page = Page(driver, base_url, key=value)
+    seed_url = page.seed_url
+    assert 'key=foo' in seed_url
+    assert 'key=mozilla%26co' in seed_url
+    import re
+    assert re.match(
+        '{}\?key=(foo|mozilla%26co)&key=(foo|mozilla%26co)'.format(base_url),
+        seed_url)
 
 
 def test_seed_url_keywords_keywords_and_params(base_url, driver):
