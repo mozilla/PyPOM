@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import collections
 import sys
 
 from .exception import UsageError
@@ -13,6 +14,12 @@ if sys.version_info >= (3,):
 else:
     import urlparse
     from urllib import urlencode
+
+
+def iterable(arg):
+    if isinstance(arg, collections.Iterable) and not isinstance(arg, str):
+        return arg
+    return [arg]
 
 
 class Page(WebView):
@@ -95,14 +102,15 @@ class Page(WebView):
         if not url:
             return None
 
-        params = {}
-        for k, v in self.url_kwargs.items():
-            if '{{{}}}'.format(k) not in str(self.URL_TEMPLATE):
-                params[k] = v
-
         url_parts = list(urlparse.urlparse(url))
-        query = dict(urlparse.parse_qsl(url_parts[4]))
-        query.update(params)
+        query = urlparse.parse_qsl(url_parts[4])
+
+        for k, v in self.url_kwargs.items():
+            if v is None:
+                continue
+            if '{{{}}}'.format(k) not in str(self.URL_TEMPLATE):
+                for i in iterable(v):
+                    query.append((k, i))
 
         url_parts[4] = urlencode(query)
         return urlparse.urlunparse(url_parts)
