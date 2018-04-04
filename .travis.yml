@@ -17,8 +17,6 @@ jobs:
       python: pypy
     - stage:
       python: pypy3
-    - stage:
-      python: nightly
     - stage: deploy
       python: 3.6
       install: skip
