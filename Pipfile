@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pluggy = "*"
+selenium = "*"
+splinter = "*"
+"zope.component" = "*"
+"zope.interface" = "*"
+
+[dev-packages]
+coveralls = "*"
+flake8 = "*"
+flake8-isort = "*"
+mock = "*"
+pytest = "*"
+pytest-cov = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
