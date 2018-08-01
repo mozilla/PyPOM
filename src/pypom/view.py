@@ -18,7 +18,7 @@ class WebView(object):
         self.timeout = timeout
         self.pm = pm
         if self.pm is None:
-            self.pm = PluginManager("pypom", implprefix="pypom_")
+            self.pm = PluginManager("pypom")
             self.pm.add_hookspecs(hooks)
             self.pm.load_setuptools_entrypoints("pypom.plugin")
             self.pm.check_pending()

@@ -23,10 +23,15 @@ Then, in your package implement one or more of the plugin :ref:`hooks` provided
 by PyPOM. The following example will take a screenshot whenever a page or
 region has finished loading::
 
+
+  from pypom import hookimpl
+
+  @hookimpl
   def pypom_after_wait_for_page_to_load(page):
       page.selenium.get_screenshot_as_file(page.__class__.__name__ + '.png')
 
 
+  @hookimpl
   def pypom_after_wait_for_region_to_load(region):
       region.root.screenshot(region.__class__.__name__ + '.png')
 
