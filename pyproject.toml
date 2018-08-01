@@ -1,0 +1,5 @@
+[tool.towncrier]
+package = "pypom"
+package_dir = "src"
+filename = "docs/news.rst"
+title_format = "{version} ({project_date})"
