@@ -9,7 +9,6 @@ def test_after_wait_for_page_to_load(page):
     log = []
 
     class Plugin:
-
         def pypom_after_wait_for_page_to_load(self, page):
             log.append(1)
 

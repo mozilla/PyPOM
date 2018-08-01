@@ -3,15 +3,17 @@ from selenium.webdriver.common.by import By
 
 
 class Results(Page):
-    _result_locator = (By.CLASS_NAME, 'result')
+    _result_locator = (By.CLASS_NAME, "result")
 
     @property
     def results(self):
-        return [self.Result(self, el) for el in self.find_elements(*self._result_locator)]
+        return [
+            self.Result(self, el) for el in self.find_elements(*self._result_locator)
+        ]
 
     class Result(Region):
-        _name_locator = (By.CLASS_NAME, 'name')
-        _detail_locator = (By.TAG_NAME, 'a')
+        _name_locator = (By.CLASS_NAME, "name")
+        _detail_locator = (By.TAG_NAME, "a")
 
         @property
         def name(self):

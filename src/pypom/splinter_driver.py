@@ -14,15 +14,7 @@ from .exception import UsageError
 from .interfaces import IDriver
 from .selenium_driver import Selenium
 
-ALLOWED_STRATEGIES = [
-    'name',
-    'id',
-    'css',
-    'xpath',
-    'text',
-    'value',
-    'tag',
-]
+ALLOWED_STRATEGIES = ["name", "id", "css", "xpath", "text", "value", "tag"]
 
 
 class ISplinter(Interface):
@@ -31,7 +23,6 @@ class ISplinter(Interface):
 
 @implementer(IDriver)
 class Splinter(Selenium):
-
     def __init__(self, driver):
         self.driver = driver
 
@@ -69,8 +60,8 @@ class Splinter(Selenium):
         node = root or self.driver
 
         if strategy in ALLOWED_STRATEGIES:
-            return getattr(node, 'find_by_' + strategy)(locator)
-        raise UsageError('Strategy not allowed')
+            return getattr(node, "find_by_" + strategy)(locator)
+        raise UsageError("Strategy not allowed")
 
     def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
@@ -115,4 +106,5 @@ def register():
             ChromeWebDriver,
             RemoteWebDriver,
             PhantomJSWebDriver,
-        ])
+        ],
+    )

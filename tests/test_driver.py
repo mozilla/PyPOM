@@ -17,6 +17,7 @@ def test_register_driver():
     @implementer(IFakeDriver)
     class FakeDriver:
         """ A fake driver """
+
         def __init__(self, driver):
             self.driver = driver
 
@@ -49,6 +50,7 @@ def test_multiple_register_driver():
     @implementer(IFakeDriver)
     class FakeDriver:
         """ A fake driver """
+
         def __init__(self, driver):
             self.driver = driver
 
@@ -58,6 +60,7 @@ def test_multiple_register_driver():
     @implementer(IFakeDriver2)
     class FakeDriver2:
         """ Another fake driver """
+
         def __init__(self, driver):
             self.driver = driver
 
@@ -88,6 +91,7 @@ def test_register_driver_class_implements():
 
     class FakeDriver:
         """ A fake driver """
+
         def __init__(self, driver):
             self.driver = driver
 

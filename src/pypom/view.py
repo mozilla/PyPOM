@@ -12,23 +12,22 @@ from .interfaces import IDriver
 
 
 class WebView(object):
-
     def __init__(self, driver, timeout, pm=None):
         self.driver = driver
         self.driver_adapter = IDriver(driver)
         self.timeout = timeout
         self.pm = pm
         if self.pm is None:
-            self.pm = PluginManager('pypom', implprefix='pypom_')
+            self.pm = PluginManager("pypom", implprefix="pypom_")
             self.pm.add_hookspecs(hooks)
-            self.pm.load_setuptools_entrypoints('pypom.plugin')
+            self.pm.load_setuptools_entrypoints("pypom.plugin")
             self.pm.check_pending()
         self.wait = self.driver_adapter.wait_factory(self.timeout)
 
     @property
     def selenium(self):
         """Backwards compatibility attribute"""
-        warn('use driver instead', DeprecationWarning, stacklevel=2)
+        warn("use driver instead", DeprecationWarning, stacklevel=2)
         return self.driver
 
     def find_element(self, strategy, locator):

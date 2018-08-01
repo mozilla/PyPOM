@@ -12,7 +12,7 @@ from pypom.splinter_driver import ALLOWED_STRATEGIES, ISplinter
 
 @pytest.fixture
 def base_url():
-    return 'https://www.mozilla.org/'
+    return "https://www.mozilla.org/"
 
 
 @pytest.fixture
@@ -25,10 +25,11 @@ def element(driver):
 @pytest.fixture
 def page(driver, base_url):
     from pypom import Page
+
     return Page(driver, base_url)
 
 
-@pytest.fixture(params=[ISelenium, ISplinter], ids=['selenium', 'splinter'])
+@pytest.fixture(params=[ISelenium, ISplinter], ids=["selenium", "splinter"])
 def driver_interface(request):
     return request.param
 

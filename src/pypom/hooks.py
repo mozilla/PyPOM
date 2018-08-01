@@ -4,7 +4,7 @@
 
 from pluggy import HookspecMarker
 
-hookspec = HookspecMarker('pypom')
+hookspec = HookspecMarker("pypom")
 
 
 @hookspec

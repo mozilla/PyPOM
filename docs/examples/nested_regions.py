@@ -3,7 +3,6 @@ from selenium.webdriver.common.by import By
 
 
 class MainPage(Page):
-
     @property
     def menu1(self):
         root = self.find_element(By.ID, "menu1")
@@ -16,14 +15,15 @@ class MainPage(Page):
 
 
 class Menu(Region):
-
     @property
     def entries(self):
-        return [Entry(self.page, item) for item in self.find_elements(*Entry.entry_locator)]
+        return [
+            Entry(self.page, item) for item in self.find_elements(*Entry.entry_locator)
+        ]
 
 
 class Entry(Region):
-    entry_locator = (By.CLASS_NAME, 'entry')
+    entry_locator = (By.CLASS_NAME, "entry")
 
     @property
     def name(self):

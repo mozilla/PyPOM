@@ -11,7 +11,6 @@ from pypom import Region
 
 
 class TestNoRoot:
-
     def test_find_element_selenium(self, page, selenium):
         locator = (str(random.random()), str(random.random()))
         Region(page).find_element(*locator)
@@ -30,6 +29,7 @@ class TestNoRoot:
     def test_is_element_displayed_not_present_selenium(self, page, selenium):
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
+
         selenium.find_element.side_effect = NoSuchElementException()
         assert not Region(page).is_element_displayed(*locator)
         selenium.find_element.assert_called_once_with(*locator)
@@ -45,7 +45,6 @@ class TestNoRoot:
 
 
 class TestRootElement:
-
     def test_find_element_selenium(self, page, selenium):
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
@@ -71,6 +70,7 @@ class TestRootElement:
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
+
         root_element.find_element.side_effect = NoSuchElementException()
         assert not Region(page, root=root_element).is_element_present(*locator)
         root_element.find_element.assert_called_once_with(*locator)
@@ -87,6 +87,7 @@ class TestRootElement:
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
+
         root_element.find_element.side_effect = NoSuchElementException()
         region = Region(page, root=root_element)
         assert not region.is_element_displayed(*locator)
@@ -105,11 +106,11 @@ class TestRootElement:
 
 
 class TestRootLocator:
-
     @pytest.fixture
     def region(self, page):
         class MyRegion(Region):
             _root_locator = (str(random.random()), str(random.random()))
+
         return MyRegion(page)
 
     def test_root_selenium(self, element, region, selenium):
@@ -137,6 +138,7 @@ class TestRootLocator:
     def test_is_element_present_not_present_selenium(self, element, region, selenium):
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
+
         element.find_element.side_effect = NoSuchElementException()
         assert not region.is_element_present(*locator)
         selenium.find_element.assert_called_once_with(*region._root_locator)
@@ -151,6 +153,7 @@ class TestRootLocator:
     def test_is_element_displayed_not_present_selenium(self, element, region, selenium):
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
+
         element.find_element.side_effect = NoSuchElementException()
         assert not region.is_element_displayed(*locator)
         element.find_element.assert_called_once_with(*locator)

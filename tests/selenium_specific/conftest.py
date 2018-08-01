@@ -19,6 +19,7 @@ def element(selenium):
 @pytest.fixture
 def page(selenium, base_url):
     from pypom import Page
+
     return Page(selenium, base_url)
 
 

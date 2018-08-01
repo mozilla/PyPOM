@@ -13,6 +13,4 @@ def registerDriver(iface, driver, class_implements=[]):
     for class_item in class_implements:
         classImplements(class_item, iface)
 
-    component.provideAdapter(
-        factory=driver, adapts=[iface],
-        provides=IDriver)
+    component.provideAdapter(factory=driver, adapts=[iface], provides=IDriver)

@@ -19,6 +19,7 @@ def element(splinter):
 @pytest.fixture
 def page(splinter, base_url):
     from pypom import Page
+
     return Page(splinter, base_url)
 
 

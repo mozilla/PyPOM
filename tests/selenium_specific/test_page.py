@@ -26,6 +26,7 @@ def test_is_element_present_selenium(page, selenium):
 def test_is_element_present_not_present_selenium(page, selenium):
     locator = (str(random.random()), str(random.random()))
     from selenium.common.exceptions import NoSuchElementException
+
     selenium.find_element.side_effect = NoSuchElementException()
     assert not page.is_element_present(*locator)
     selenium.find_element.assert_called_once_with(*locator)
@@ -40,6 +41,7 @@ def test_is_element_displayed_selenium(page, selenium):
 def test_is_element_displayed_not_present_selenium(page, selenium):
     locator = (str(random.random()), str(random.random()))
     from selenium.common.exceptions import NoSuchElementException
+
     selenium.find_element.side_effect = NoSuchElementException()
     assert not page.is_element_displayed(*locator)
     selenium.find_element.assert_called_once_with(*locator)

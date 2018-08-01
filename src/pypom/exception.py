@@ -5,4 +5,5 @@
 
 class UsageError(Exception):
     """PyPOM usage error."""
+
     pass

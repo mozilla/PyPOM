@@ -142,7 +142,9 @@ class Region(WebView):
         :rtype: bool
 
         """
-        return self.driver_adapter.is_element_displayed(strategy, locator, root=self.root)
+        return self.driver_adapter.is_element_displayed(
+            strategy, locator, root=self.root
+        )
 
     @property
     def loaded(self):

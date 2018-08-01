@@ -96,8 +96,9 @@ class Page(WebView):
         """
         url = self.base_url
         if self.URL_TEMPLATE is not None:
-            url = urlparse.urljoin(self.base_url,
-                                   self.URL_TEMPLATE.format(**self.url_kwargs))
+            url = urlparse.urljoin(
+                self.base_url, self.URL_TEMPLATE.format(**self.url_kwargs)
+            )
 
         if not url:
             return None
@@ -108,7 +109,7 @@ class Page(WebView):
         for k, v in self.url_kwargs.items():
             if v is None:
                 continue
-            if '{{{}}}'.format(k) not in str(self.URL_TEMPLATE):
+            if "{{{}}}".format(k) not in str(self.URL_TEMPLATE):
                 for i in iterable(v):
                     query.append((k, i))
 
@@ -129,7 +130,7 @@ class Page(WebView):
             self.driver_adapter.open(self.seed_url)
             self.wait_for_page_to_load()
             return self
-        raise UsageError('Set a base URL or URL_TEMPLATE to open this page.')
+        raise UsageError("Set a base URL or URL_TEMPLATE to open this page.")
 
     def wait_for_page_to_load(self):
         """Wait for the page to load."""
