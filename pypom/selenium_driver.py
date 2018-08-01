@@ -6,8 +6,8 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import (Android, BlackBerry, Chrome, Edge, Firefox, Ie,
                                 Opera, PhantomJS, Remote, Safari)
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.events import EventFiringWebDriver
+from selenium.webdriver.support.ui import WebDriverWait
 from zope.interface import Interface, implementer
 
 from .driver import registerDriver

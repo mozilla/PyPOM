@@ -2,11 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from pluggy import PluginManager
 from warnings import warn
 
-from .interfaces import IDriver
+from pluggy import PluginManager
+
 from pypom import hooks
+
+from .interfaces import IDriver
 
 
 class WebView(object):
