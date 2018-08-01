@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 pluggy = "*"
+pypom = {editable = true, path = ".", extras = ["splinter"]}
 selenium = "*"
 splinter = "*"
 "zope.component" = "*"
@@ -15,7 +16,6 @@ coveralls = "*"
 flake8 = "*"
 flake8-isort = "*"
 mock = "*"
-pytest = "*"
 pytest-cov = "*"
 sphinx = "*"
 sphinx-rtd-theme = "*"
