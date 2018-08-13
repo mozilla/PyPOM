@@ -3,6 +3,32 @@ Release Notes
 
 .. towncrier release notes start
 
+2.1.0 (2018-08-13)
+==================
+
+Bugfixes
+--------
+
+- Replace use of ``implprefix`` with ``HookimplMarker`` due to deprecation.
+
+  Existing PyPOM plugins will need to be updated to import the `hookimpl` and use
+  it to decorate hook implementations rather than rely on the prefix of the
+  function names.
+
+  Before::
+
+    def pypom_after_wait_for_page_to_load(page):
+        pass
+
+  After::
+
+    from pypom import hookimpl
+
+    @hookimpl
+    def pypom_after_wait_for_page_to_load(page):
+        pass (#90)
+
+
 2.0.0 (2018-04-17)
 ==================
 
