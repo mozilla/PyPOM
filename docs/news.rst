@@ -3,6 +3,15 @@ Release Notes
 
 .. towncrier release notes start
 
+2.2.0 (2018-10-29)
+==================
+
+Deprecations and Removals
+-------------------------
+
+- Removed PhantomJS support from Splinter driver due to removal in Splinter v0.9.0. (#93)
+
+
 2.1.0 (2018-08-13)
 ==================
 
