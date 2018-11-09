@@ -108,7 +108,7 @@ def test_seed_url_keywords_multiple_params(base_url, driver):
     assert "key={}".format(value[1]) in seed_url
     import re
 
-    assert re.match("{}\?key=(foo|bar)&key=(foo|bar)".format(base_url), seed_url)
+    assert re.match(r"{}\?key=(foo|bar)&key=(foo|bar)".format(base_url), seed_url)
 
 
 def test_seed_url_keywords_multiple_params_special(base_url, driver):
@@ -120,7 +120,7 @@ def test_seed_url_keywords_multiple_params_special(base_url, driver):
     import re
 
     assert re.match(
-        "{}\?key=(foo|mozilla%26co)&key=(foo|mozilla%26co)".format(base_url), seed_url
+        r"{}\?key=(foo|mozilla%26co)&key=(foo|mozilla%26co)".format(base_url), seed_url
     )
 
 
