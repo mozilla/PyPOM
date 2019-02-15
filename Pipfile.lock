@@ -549,11 +549,11 @@
         },
         "towncrier": {
             "hashes": [
-                "sha256:3c0da1de042861df9030c0608d346d55cabe14cfa7cf04045f22b0af63eb8aa7",
-                "sha256:cfde66ada782db9269407eaefb38562d3d2a4bc4d7647c0b2197ed184b869aae"
+                "sha256:48251a1ae66d2cf7e6fa5552016386831b3e12bb3b2d08eb70374508c17a8196",
+                "sha256:de19da8b8cb44f18ea7ed3a3823087d2af8fcf497151bb9fd1e1b092ff56ed8d"
             ],
             "index": "pypi",
-            "version": "==18.6.0"
+            "version": "==19.2.0"
         },
         "urllib3": {
             "hashes": [
