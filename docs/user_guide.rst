@@ -225,8 +225,8 @@ write locators for your driver:
 
 .. literalinclude:: examples/repeated_regions.py
    :language: python
-   :emphasize-lines: 6-6
-   :lines: 5-22
+   :emphasize-lines: 6-8
+   :lines: 5-24
 
 Nested regions
 ~~~~~~~~~~~~~~
@@ -243,7 +243,7 @@ to pass ``self.page`` when instantiating nested regions:
 
 .. literalinclude:: examples/nested_regions.py
    :language: python
-   :emphasize-lines: 5-6,10-11,18-18
+   :emphasize-lines: 4-5,9-10,16-18
    :lines: 5-30
 
 
