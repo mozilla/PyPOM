@@ -392,9 +392,9 @@ inherited by a base project page class.
 .. note::
 
   The default timeout of 10 seconds may be considered excessive, and you may
-  wish to reduce it. It it not recommended to increase the timeout however. If
-  you have interactions that take longer than the default you may find that you
-  have a performance issue that will considerably affect the user experience.
+  wish to reduce it. Increasing the timeout is not recommended. If you have
+  interactions that take longer than the default you may find that you have
+  a performance issue that will considerably affect the user experience.
 
 .. _Selenium: http://docs.seleniumhq.org/
 .. _Splinter: https://github.com/cobrateam/splinter
